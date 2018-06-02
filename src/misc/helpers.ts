@@ -7,8 +7,6 @@ export function isSuperuser(user: string, isMod: boolean) {
     return (user == cb.room_slug || isMod && cb.settings.allow_mod_superuser_cmd == true);
 }
 
-
-
 export function customStringify(v: any) {
     const cache = new Map();
     return JSON.stringify(v, function (key, value) {
@@ -23,3 +21,7 @@ export function customStringify(v: any) {
         return value;
     });
 };
+
+export function parseBoolean (str: string): boolean {
+        return (str == "Yes");
+}

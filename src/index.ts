@@ -3,13 +3,14 @@ import { Pokemons } from "./models/pokemon/pokemon";
 import Messenger from "./controllers/messenger";
 import PokeDex from "./controllers/pokedex";
 import TrainerManager from "./controllers/trainermanager";
-import { isSuperuser, customStringify } from "./misc/helpers";
+import { isSuperuser, customStringify, parseBoolean } from "./misc/helpers";
+import Banner from "./controllers/banner";
 
 const App = {
     Name: "Chaturbate Pokedex TS",
     Version: 0.1,
     Dev: "thmo_",
-    OriginalAuthor: "asudem", // Thanks for the Idea and everything!
+    OriginalAuthor: "asudem", // Thanks for the idea and everything! Hit me up if you want me to contribute and/or merge or whatever!
     CMDS: {
         ADDUSER: "adduser",
         EVOLVE: "evolve",
@@ -44,7 +45,26 @@ cb.settings_choices = [
     { name: 'stone_price', label: 'Tokens Required To Purchase An Evolution Stone? (Some Pokemon, like Pikachu, require stones to evolve. Set the price of the stones here. "/buystone" will allow users to purchase a stone. Broadcasters do not need to buy stones. Just type "/buystone".', type: 'int', minValue: 1, maxValue: 1000, required: true, defaultValue: 200 },
 ];
 
+cb.settings.allow_mod_superuser_cmd = parseBoolean(cb.settings.mod_allow_broadcaster_cmd);
+
+Messenger.sendSuccessMessage("Pokedex v" + App.Version + " started.");
+
 let trainerManager = new TrainerManager();
+let banner = new Banner();
+
+Messenger.sendBroadcasterNotice("This Pokemon Bot is in beta. It can not become better if I do not know what is wrong. Please comment on the bot's page any errors or questions. Make sure to check out the original Version (PokeDex) of asudem! Thank you.");
+
+cb.onEnter(user => {
+    if (!trainerManager.PokemonTrainers.has(user.user)) {
+        Messenger.sendWelcomeMessage(user.user);
+    } else if (user.user === App.Dev) {
+        if (cb.settings.allow_mod_superuser_cmd) {
+            Messenger.sendSuccessMessage("Pokedex v" + App.Version + " Support Mode: ON!", App.Dev);
+        } else {
+            Messenger.sendErrorMessage("Pokedex v" + App.Version + " Support Mode: OFF!", App.Dev);
+        }
+    }
+});
 
 cb.onMessage(message => {
 
@@ -54,7 +74,6 @@ cb.onMessage(message => {
         if (splitMsg[1].indexOf('/') === 0) {
             message.m = message.m.trim().substring(message.m.indexOf('/'), message.m.length).trim();
         }
-
     }
 
     // Commands...
