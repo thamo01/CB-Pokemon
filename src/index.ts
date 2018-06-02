@@ -51,6 +51,11 @@ cb.settings.allow_mod_superuser_cmd = parseBoolean(cb.settings.mod_allow_broadca
 Messenger.sendSuccessMessage("Pokemon - Gotta Catch 'Em All v" + App.Version + " started.");
 
 let trainerManager = new TrainerManager();
+if (cb.settings.broadcaster_pokemon !== 0 && trainerManager.PokemonTrainers.has(cb.room_slug)) {
+    trainerManager.PokemonTrainers.get(cb.room_slug)!.Pokemon.Level = 200;
+    trainerManager.PokemonTrainers.get(cb.room_slug)!.Pokemon.updateStats();
+}
+
 let banner = new Banner();
 
 Messenger.sendBroadcasterNotice("This Pokemon Bot is in beta. It can not become better if I do not know what is wrong. Please comment on the bot's page any errors or questions. Make sure to check out the original Version (PokeDex) of asudem! Thank you.");
@@ -58,7 +63,7 @@ Messenger.sendBroadcasterNotice("This Pokemon Bot is in beta. It can not become 
 cb.onEnter(user => {
     if (!trainerManager.PokemonTrainers.has(user.user)) {
         Messenger.sendWelcomeMessage(user.user);
-        banner.sendBanner();
+        banner.sendBanner(user.user);
     } else if (user.user === App.Dev) {
         if (cb.settings.allow_mod_superuser_cmd) {
             Messenger.sendSuccessMessage("Pokedex v" + App.Version + " Support Mode: ON!", App.Dev);
@@ -170,18 +175,20 @@ cb.onMessage(message => {
         } else if(message.m.substring(1, 7) === App.CMDS.ATTACK) {
             if(trainerManager.PokemonTrainers.has(splitMsg[1])) {
                 if (trainerManager.PokemonTrainers.has(message.user)) {
-                    if (message.user == splitMsg[1]) {
+                    if (message.user === splitMsg[1]) {
                         Messenger.sendErrorMessage("Your Pokemon can't attack itself now, can it? Do you have weird fetishes...?", message.user);
+                    //} else if(splitMsg[1] === cb.room_slug) {
+                    //    Messenger.sendErrorMessage("Wow, woah.. Calm down little fellow trainer. You can't just head to the final boss before beating the others...", message.user);
                     } else {
                         Messenger.sendSuccessMessage("Your Pokemon now fights with your foe's Pokemon! Wish em luck!", message.user);
-                        Messenger.sendErrorMessage("Your Pokemon is beeing attacked by another Pokemon! Wish em luck!", splitMsg[1]);
+                        Messenger.sendErrorMessage("Your Pokemon is being attacked by another Pokemon! Wish em luck!", splitMsg[1]);
                         
                         const move = trainerManager.PokemonTrainers.get(splitMsg[1])!.Pokemon.Move;
                         const currentHP = trainerManager.PokemonTrainers.get(splitMsg[1])!.Pokemon.Life;
                         const leftHP = trainerManager.PokemonTrainers.get(message.user)!.Pokemon.Attack(trainerManager.PokemonTrainers.get(splitMsg[1])!.Pokemon);
 
-                        Messenger.sendInfoMessage(`Dealt ${currentHP-leftHP} of Damage. Using ${move.Name}`, message.user);
-                        Messenger.sendInfoMessage(`Dealt ${currentHP-leftHP} of Damage. Using ${move.Name}`, splitMsg[1]);
+                        Messenger.sendInfoMessage(`Dealt ${currentHP-leftHP} Points of Damage. Using ${move.Name}`, message.user);
+                        Messenger.sendInfoMessage(`Received ${currentHP-leftHP} Points of Damage. Using ${move.Name}`, splitMsg[1]);
 
                         if (leftHP <= 0) {
                             Messenger.sendSuccessMessage("Your Pokemon defeated your foe's Pokemon, congrats! Your pokemon levels up!", message.user);
@@ -190,7 +197,7 @@ cb.onMessage(message => {
                             trainerManager.RemovePokemonFromTrainer(splitMsg[1]);
                             trainerManager.LevelUpPokemonOfUser(message.user, 2);
                         } else {
-                            Messenger.sendErrorMessage(`Your Pokemon fought hard, but could beat your foe. Tho it is hurt... It has ${leftHP} HP left.`, message.user);
+                            Messenger.sendErrorMessage(`Your Pokemon fought hard, but couldn't beat your foe. Tho it is hurt... It has ${leftHP} HP left.`, message.user);
                             Messenger.sendSuccessMessage(`Your Pokemon successfully defended itself, but lost life points. It has ${leftHP} HP left. Better start fighting back (using '/attack ${message.user}')`, splitMsg[1]);
                         }
                     }

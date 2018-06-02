@@ -15,7 +15,7 @@ export default class Banner {
                             '/release' to remove your Pokemon
                             Prices:\n`;
 
-    public sendBanner(): void {
+    public sendBanner(user?: string): void {
         const tempPrices = [cb.settings.catch_pokemon, cb.settings.uncommon_tip, cb.settings.rare_tip];
         let pricesMessage: string = "";
 
@@ -24,6 +24,6 @@ export default class Banner {
             pricesMessage += `:pkmnball Catch ${pkmn.Rariry.toString()} for ${price} Tokens! ${PokeDex.GetPokemonIcon(pkmn)}\n`;
         }
 
-        Messenger.sendInfoMessage(this.startMessage + pricesMessage + "Let the Battles Begin!");
+        Messenger.sendInfoMessage(this.startMessage + pricesMessage + "Let the Battles Begin!", user);
     }
 }

@@ -18,7 +18,7 @@ export default class Messenger {
                             The number of registered Pokemon in the Pokedex is currently at ${Pokemons.length - 1}
                             There are still more Pokemon are waiting to be discovered.
                             Keep an eye out for them in the future!`;
-        this.sendInfoMessage(welcomeMsg);
+        this.sendInfoMessage(welcomeMsg, user);
     }
 
     public static sendMessageToUser(message: string, user: string, background?: MsgColors, foreground?: MsgColors) {

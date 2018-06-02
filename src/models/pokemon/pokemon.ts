@@ -29,6 +29,7 @@ export class Pokemon {
         this.Atk = BaseAtk;
         this.Def = BaseDef;
         this.Life = BaseLife;
+        this.updateStats();
     }
 
     public Attack(foe: Pokemon): number {
@@ -85,18 +86,25 @@ export class Pokemon {
 
         const damage = precalc * modifier;
 
-        foe.Life -= damage;
+        foe.Life = Math.round(foe.Life - damage);
         return foe.Life;
     }
 
     public updateStats() {
-        this.Life = this.BaseLife * 2 * this.Level / 100 + 10 + this.Level;
-        this.Atk = this.BaseAtk * 2 * this.Level / 100 + 5;
-        this.Def = this.BaseDef * 2 * this.Level / 100 + 5;
+        this.Life = Math.round(this.BaseLife * 2 * this.Level / 100 + 10 + this.Level);
+        this.Atk = Math.round(this.BaseAtk * 2 * this.Level / 100 + 5);
+        this.Def = Math.round(this.BaseDef * 2 * this.Level / 100 + 5);
     }
 
     public LvlUp(numberOfLevels: number): number {
-        this.Level += numberOfLevels;
+        if (this.Level <100) {
+            if ((this.Level + numberOfLevels) < 100) {
+                this.Level += numberOfLevels;
+            } else {
+                this.Level = 100;
+            }
+        }
+        
         this.updateStats();
         return this.Level;
     }
