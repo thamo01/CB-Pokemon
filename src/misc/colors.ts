@@ -13,7 +13,10 @@
     GrassGreen = "d3df66",
     RockYellow = "d3bd5c",
     GhostyPurple = "b29adb",
-    Purple = "ac8bfc"
+    Purple = "ac8bfc",
+    SteelGrey = "B8B8D0",
+    Darkness = "705848",
+    FairyPink = "EE99AC"
 }
 
 export enum MsgColors {
