@@ -119,10 +119,10 @@ cb.onMessage(message => {
         } else if (message.m.substring(1, 9) === App.CMDS.BUYSTONE) {
             if (trainerManager.PokemonTrainers.has(message.user) && trainerManager.PokemonTrainers.get(message.user)!.Pokemon.UsesStone) {
                 if (trainerManager.PokemonTrainers.get(message.user)!.BuyStoneWarning === true) {
-                    Messenger.sendInfoMessage("Okay, your next tip of " + cb.settings.stone_price + " tokens will buy you a " + trainerManager.PokemonTrainers.get(message.user)!.Pokemon.Type.Stone, message.user);
+                    Messenger.sendInfoMessage("Okay, your next tip of " + cb.settings.stone_price + " tokens will buy you a " + trainerManager.PokemonTrainers.get(message.user)!.Pokemon.Types[0].Stone, message.user);
                     trainerManager.PokemonTrainers.get(message.user)!.BuyStoneConfirmation = true;
                 } else {
-                    Messenger.sendInfoMessage("Are you sure you want to purchase a " + trainerManager.PokemonTrainers.get(message.user)!.Pokemon.Type.Stone + "? It costs " + cb.settings.stone_price + " tokens to purchase a stone. Type '/buystone' again to allow your next tip of " + cb.settings.stone_price + " tokens to buy a " + trainerManager.PokemonTrainers.get(message.user)!.Pokemon.Type.Stone, message.user);
+                    Messenger.sendInfoMessage("Are you sure you want to purchase a " + trainerManager.PokemonTrainers.get(message.user)!.Pokemon.Types[0].Stone + "? It costs " + cb.settings.stone_price + " tokens to purchase a stone. Type '/buystone' again to allow your next tip of " + cb.settings.stone_price + " tokens to buy a " + trainerManager.PokemonTrainers.get(message.user)!.Pokemon.Types[0].Stone, message.user);
                     trainerManager.PokemonTrainers.get(message.user)!.BuyStoneWarning = true;
                 }
             } else {
@@ -139,7 +139,7 @@ cb.onMessage(message => {
                 } else if (trainerManager.PokemonTrainers.get(splitMsg[1])!.Pokemon.Evolves === 0 && !trainerManager.PokemonTrainers.get(splitMsg[1])!.Pokemon.UsesStone) {
                     Messenger.sendInfoMessage(`${splitMsg[1]}'s ${trainerManager.PokemonTrainers.get(splitMsg[1])!.Pokemon.Name} is currently level ${trainerManager.PokemonTrainers.get(splitMsg[1])!.Pokemon.Level} This Pokemon does not evolve.`, message.user);
                 } else if (trainerManager.PokemonTrainers.get(splitMsg[1])!.Pokemon.UsesStone) {
-                    Messenger.sendInfoMessage(`${splitMsg[1]}'s ${trainerManager.PokemonTrainers.get(splitMsg[1])!.Pokemon.Name} is currently level ${trainerManager.PokemonTrainers.get(splitMsg[1])!.Pokemon.Level} and needs a ${trainerManager.PokemonTrainers.get(splitMsg[1])!.Pokemon.Type.Stone} to evolve. ${splitMsg[1]} may type '/buystone' to purchase one!`, message.user);
+                    Messenger.sendInfoMessage(`${splitMsg[1]}'s ${trainerManager.PokemonTrainers.get(splitMsg[1])!.Pokemon.Name} is currently level ${trainerManager.PokemonTrainers.get(splitMsg[1])!.Pokemon.Level} and needs a ${trainerManager.PokemonTrainers.get(splitMsg[1])!.Pokemon.Types[0].Stone} to evolve. ${splitMsg[1]} may type '/buystone' to purchase one!`, message.user);
                 } else if (trainerManager.PokemonTrainers.get(splitMsg[1])!.Pokemon.TradeEvolve) {
                     Messenger.sendInfoMessage(`${splitMsg[1]}'s ${trainerManager.PokemonTrainers.get(splitMsg[1])!.Pokemon.Name} is currently level ${trainerManager.PokemonTrainers.get(splitMsg[1])!.Pokemon.Level} and needs to be traded to evolve. Type '/trade' followed by a username to evolve them!`, message.user);
                 }
@@ -158,7 +158,7 @@ cb.onMessage(message => {
     if (trainerManager.PokemonTrainers.has(message.user) && !message["X-Spam"]){
         let pokemon = trainerManager.PokemonTrainers.get(message.user)!.Pokemon;
         message.m = PokeDex.GetPokemonIcon(pokemon) + " " + message.m;
-        message.background = pokemon.Type.Color;
+        message.background = pokemon.Types[0].Color;
     }
 
     return message;
@@ -169,7 +169,7 @@ cb.onTip(tip => {
         trainerManager.AddPokemonToTrainer(PokeDex.GetRandomPokemon(tip.amount), tip.from_user, tip.amount);
     } else if (trainerManager.PokemonTrainers.has(tip.from_user) && trainerManager.PokemonTrainers.get(tip.from_user)!.BuyStoneConfirmation === true) {
         if (tip.amount === cb.settings.stone_price) {
-            Messenger.sendInfoMessage("You just purchased a " + trainerManager.PokemonTrainers.get(tip.from_user)!.Pokemon.Type.Stone + "!", tip.from_user);
+            Messenger.sendInfoMessage("You just purchased a " + trainerManager.PokemonTrainers.get(tip.from_user)!.Pokemon.Types[0].Stone + "!", tip.from_user);
             trainerManager.PokemonTrainers.get(tip.from_user)!.BuyStoneWarning = false;
             trainerManager.PokemonTrainers.get(tip.from_user)!.BuyStoneConfirmation = false;
             trainerManager.EvolvePokemonOfUser(tip.from_user);

@@ -10,7 +10,7 @@ export default class PokeDex {
     }
 
     public static IdentifyPokemon(pokemon: Pokemon): string {
-        return `PokeDex Entry #${pokemon.Id}: ${this.GetPokemonIcon(pokemon)} ${pokemon.Name} - ${pokemon.Rariry}, ${pokemon.Type.Name} - ${pokemon.Description}`;
+        return `PokeDex Entry #${pokemon.Id}: ${this.GetPokemonIcon(pokemon)} ${pokemon.Name} - ${pokemon.Rariry}, ${pokemon.Types[0].Name} - ${pokemon.Description}`;
     }
 
     public static GetEvolutionText(pokemon: Pokemon): string {
@@ -23,7 +23,7 @@ export default class PokeDex {
         }
 
         if (pokemon.UsesStone) {
-            return `Your ${this.GetPokemonIcon(pokemon)} ${pokemon.Name} evolves by using a ${pokemon.Type.Stone}. To buy a stone, use the command '/buystone' to purchase one!`;
+            return `Your ${this.GetPokemonIcon(pokemon)} ${pokemon.Name} evolves by using a ${pokemon.Types[0].Stone}. To buy a stone, use the command '/buystone' to purchase one!`;
         }
 
         if (pokemon.Evolves > 0 && pokemon.Evolves > pokemon.Level) {
