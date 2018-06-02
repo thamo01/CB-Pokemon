@@ -9,6 +9,7 @@
     "clean": "gts clean",
     "compile": "tsc -p .",
     "browserify": "browserify ./build/src/index.js -o ./build/src/browserified-index.js",
+    "browserifymin": "browserify -p tinyify ./build/src/index.js > ./build/src/browserified-index.min.js",
     "fix": "gts fix",
     "prepare": "npm run compile",
     "pretest": "npm run compile",
