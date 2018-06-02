@@ -10,9 +10,10 @@ export default class Banner {
     }
 
     private startMessage =  `Pokemon - Gotta Catch 'Em All (with Tokens :P)!
-                            '/level <username>' to see a Pokemon's level!
-                            '/identify <username>' uses the Pokedex!
-                            '/release' to remove your Pokemon
+                            '/level <username>' to see a Pokemon's level.
+                            '/identify <username>' uses the Pokedex.
+                            '/attack <username>' to attack your foe!
+                            '/release' to remove your Pokemon :(...
                             Prices:\n`;
 
     public sendBanner(user?: string): void {

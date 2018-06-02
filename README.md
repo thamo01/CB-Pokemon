@@ -23,6 +23,11 @@ Current functionality:
 - Catch Pokemon with different Pokeballs
 - Level 'em up
 - Release the pokemon and catch more
+- Attack your opponents and battle with your pokemons.
+    Damage is calculated according to whats known of the official games.
+    It includes the Base Stats of your Pokemon, the new stats according to your level.
+    Takes account for what move your pokemon uses (moves are randomly picked from the available moves to the specific Pokemon).
+    Takes account of the move type and pokemon type. Nullifies Damage if for ex. a Ghost Type is beeing attacked of a Normal Type.
 
 - Pokemon Icons
 - Colored Background according to Pokemon type
@@ -43,3 +48,4 @@ Commands:
         "/release" - Releases current pokemon
         "/identify XY" - Identify the pokemon of user XY
         "/level XY" - Get level of the pokemon of user XY and get information on how to evolve the pokemon
+        "/attack XY - Attack your choosen opponent.
