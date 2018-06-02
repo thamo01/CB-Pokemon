@@ -3,7 +3,7 @@ import { Pokemons } from "./models/pokemon/pokemon";
 import Messenger from "./controllers/messenger";
 import PokeDex from "./controllers/pokedex";
 import TrainerManager from "./controllers/trainermanager";
-import { isSuperuser } from "./misc/helpers";
+import { isSuperuser, customStringify } from "./misc/helpers";
 
 const App = {
     Name: "Chaturbate Pokedex TS",
@@ -146,6 +146,8 @@ cb.onMessage(message => {
             } catch (err) {
                 Messenger.sendErrorMessage("Could not get the level of " + splitMsg[1] + "'s Pokemon. Please check the spelling or verify they have caught a Pokemon. " + err);
             }
+        } else if (message.m.substring(1, 9) === "debugpkm") {
+            cb.log(customStringify(trainerManager.PokemonTrainers.get(message.user)!.Pokemon));
         } else {
             //handle nonsense commands
         }
@@ -156,8 +158,11 @@ cb.onMessage(message => {
     }
 
     if (trainerManager.PokemonTrainers.has(message.user) && !message["X-Spam"]){
+        cb.log("Got pokemon.. ");
         let pokemon = trainerManager.PokemonTrainers.get(message.user)!.Pokemon;
         message.m = PokeDex.GetPokemonIcon(pokemon) + " " + message.m;
+
+        cb.log("color: " + pokemon.Types[0].Color);
         message.background = pokemon.Types[0].Color;
     }
 
