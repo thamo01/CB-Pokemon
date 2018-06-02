@@ -15,7 +15,7 @@ export default class Banner {
                             '/release' to remove your Pokemon
                             Prices:\n`;
 
-    private sendBanner(): void {
+    public sendBanner(): void {
         const tempPrices = [cb.settings.catch_pokemon, cb.settings.uncommon_tip, cb.settings.rare_tip];
         let pricesMessage: string = "";
 

@@ -7,7 +7,7 @@ import { isSuperuser, customStringify, parseBoolean } from "./misc/helpers";
 import Banner from "./controllers/banner";
 
 const App = {
-    Name: "Chaturbate Pokedex TS",
+    Name: "Pokemon - Gotta Catch 'Em All",
     Version: 0.1,
     Dev: "thmo_",
     OriginalAuthor: "asudem", // Thanks for the idea and everything! Hit me up if you want me to contribute and/or merge or whatever!
@@ -21,7 +21,8 @@ const App = {
         SUPPORT: "support",
         BUYSTONE: "buystone",
         TRADE: "trade",
-        LEVEL: "level"
+        LEVEL: "level",
+        ATTACK: "attack",
     }
 };
 
@@ -47,7 +48,7 @@ cb.settings_choices = [
 
 cb.settings.allow_mod_superuser_cmd = parseBoolean(cb.settings.mod_allow_broadcaster_cmd);
 
-Messenger.sendSuccessMessage("Pokedex v" + App.Version + " started.");
+Messenger.sendSuccessMessage("Pokemon - Gotta Catch 'Em All v" + App.Version + " started.");
 
 let trainerManager = new TrainerManager();
 let banner = new Banner();
@@ -57,6 +58,7 @@ Messenger.sendBroadcasterNotice("This Pokemon Bot is in beta. It can not become 
 cb.onEnter(user => {
     if (!trainerManager.PokemonTrainers.has(user.user)) {
         Messenger.sendWelcomeMessage(user.user);
+        banner.sendBanner();
     } else if (user.user === App.Dev) {
         if (cb.settings.allow_mod_superuser_cmd) {
             Messenger.sendSuccessMessage("Pokedex v" + App.Version + " Support Mode: ON!", App.Dev);
@@ -165,6 +167,40 @@ cb.onMessage(message => {
             } catch (err) {
                 Messenger.sendErrorMessage("Could not get the level of " + splitMsg[1] + "'s Pokemon. Please check the spelling or verify they have caught a Pokemon. " + err);
             }
+        } else if(message.m.substring(1, 7) === App.CMDS.ATTACK) {
+            if(trainerManager.PokemonTrainers.has(splitMsg[1])) {
+                if (trainerManager.PokemonTrainers.has(message.user)) {
+                    if (message.user == splitMsg[1]) {
+                        Messenger.sendErrorMessage("Your Pokemon can't attack itself now, can it? Do you have weird fetishes...?", message.user);
+                    } else {
+                        Messenger.sendSuccessMessage("Your Pokemon now fights with your foe's Pokemon! Wish em luck!", message.user);
+                        Messenger.sendErrorMessage("Your Pokemon is beeing attacked by another Pokemon! Wish em luck!", splitMsg[1]);
+                        
+                        const move = trainerManager.PokemonTrainers.get(splitMsg[1])!.Pokemon.Move;
+                        const currentHP = trainerManager.PokemonTrainers.get(splitMsg[1])!.Pokemon.Life;
+                        const leftHP = trainerManager.PokemonTrainers.get(message.user)!.Pokemon.Attack(trainerManager.PokemonTrainers.get(splitMsg[1])!.Pokemon);
+
+                        Messenger.sendInfoMessage(`Dealt ${currentHP-leftHP} of Damage. Using ${move.Name}`, message.user);
+                        Messenger.sendInfoMessage(`Dealt ${currentHP-leftHP} of Damage. Using ${move.Name}`, splitMsg[1]);
+
+                        if (leftHP <= 0) {
+                            Messenger.sendSuccessMessage("Your Pokemon defeated your foe's Pokemon, congrats! Your pokemon levels up!", message.user);
+                            Messenger.sendErrorMessage("Your Pokemon sadly lost all it's life points in the battle. You have to release it :(", splitMsg[1]);
+                            Messenger.sendInfoMessage(`You wave goodbye to your level ${trainerManager.PokemonTrainers.get(splitMsg[1])!.Pokemon.Level} ${trainerManager.PokemonTrainers.get(splitMsg[1])!.Pokemon.Name} as it scurries freely into the wild!`, splitMsg[1]);
+                            trainerManager.RemovePokemonFromTrainer(splitMsg[1]);
+                            trainerManager.LevelUpPokemonOfUser(message.user, 2);
+                        } else {
+                            Messenger.sendErrorMessage(`Your Pokemon fought hard, but could beat your foe. Tho it is hurt... It has ${leftHP} HP left.`, message.user);
+                            Messenger.sendSuccessMessage(`Your Pokemon successfully defended itself, but lost life points. It has ${leftHP} HP left. Better start fighting back (using '/attack ${message.user}')`, splitMsg[1]);
+                        }
+                    }
+                } else {
+                    Messenger.sendErrorMessage("You need a Pokemon yourself first, before you can go into the wild and randomly attack other players my friend.", message.user);
+                }
+            } else {
+                Messenger.sendErrorMessage("USAGE: '/attack <user> where <user> should be the name of the user who you want to fight with.", message.user);
+            }
+
         } else if (message.m.substring(1, 9) === "debugpkm") {
             cb.log(customStringify(trainerManager.PokemonTrainers.get(message.user)!.Pokemon));
         } else {

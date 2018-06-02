@@ -36,9 +36,10 @@ export default class TrainerManager {
 
     public EvolvePokemonOfUser(user: string) {
         const oldPokemon = this.PokemonTrainers.get(user)!.Pokemon;
-        const newPokemon = Pokemons[oldPokemon.Id+1];
+        const newPokemon = Pokemons[oldPokemon.Id+1].Clone();
         newPokemon.Level = oldPokemon.Level;
         newPokemon.Petname = oldPokemon.Petname;
+        newPokemon.updateStats();
 
         Messenger.sendInfoMessage(`Your ${PokeDex.GetPokemonIcon(oldPokemon)} ${oldPokemon.Name} has evolved into a ${PokeDex.GetPokemonIcon(newPokemon)} ${newPokemon.Name}!`, user);
         this.PokemonTrainers.get(user)!.Pokemon = newPokemon;

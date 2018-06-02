@@ -4,7 +4,10 @@ import { Move, Moves } from "./moves";
 
 export class Pokemon {
     public Petname: string | null = null;
-    public Move?: Move;
+    public Move: Move;
+    public Atk: number;
+    public Def: number;
+    public Life: number;
 
     public constructor(
         public Id: number,
@@ -17,19 +20,24 @@ export class Pokemon {
         public Description: string | null = null,
         public TradeEvolve: boolean = false,
         public UsesStone: boolean = false,
-        public Atk: number = 25,
-        public Def: number = 25,
-        public Life: number = 100,
+        public BaseAtk: number = 25,
+        public BaseDef: number = 25,
+        public BaseLife: number = 100,
         public availableMoves: Move[] = [Moves.Scratch, Moves.Pound]
-    ) {}
+    ) {
+        this.Move = this.availableMoves[Math.floor(Math.random() * this.availableMoves.length)];
+        this.Atk = BaseAtk;
+        this.Def = BaseDef;
+        this.Life = BaseLife;
+    }
 
     public Attack(foe: Pokemon): number {
         let precalc;
 
-        if (this.Move!.Power === null) {
+        if (this.Move.Power === null) {
             precalc = (((((2*this.Level)/5)+2) * this.Atk / foe.Def)/50) + 2;
         } else {
-            precalc = (((((2*this.Level)/5)+2) * this.Move!.Power! * this.Atk / foe.Def)/50) + 2;
+            precalc = (((((2*this.Level)/5)+2) * this.Move.Power! * this.Atk / foe.Def)/50) + 2;
         }
 
         const random = Math.floor(Math.random()*(100-85+1)+85) / 100;
@@ -39,7 +47,7 @@ export class Pokemon {
 
         let nullified = false;
 
-        if (this.Types.some( type2 => type2.Id === this.Move!.Type.Id)) {
+        if (this.Types.some( type2 => type2.Id === this.Move.Type.Id)) {
             sameType = 1.5;
         }
 
@@ -47,19 +55,19 @@ export class Pokemon {
             let _nullified = false;
 
             foeType.Weakness.forEach(weak => {
-                if (weak.Id === this.Move!.Type.Id) {
+                if (weak.Id === this.Move.Type.Id) {
                     typeEffective += 1;
                 }
             });
 
             foeType.Strength.forEach(strength => {
-                if (strength.Id === this.Move!.Type.Id) {
+                if (strength.Id === this.Move.Type.Id) {
                     typeEffective -= 0.25
                 }
             });
 
             foeType.Nullifies.forEach(nullifies => {
-                if (nullifies.Id === this.Move!.Type.Id) {
+                if (nullifies.Id === this.Move.Type.Id) {
                     nullified = true;
                 }
             });
@@ -81,13 +89,20 @@ export class Pokemon {
         return foe.Life;
     }
 
+    public updateStats() {
+        this.Life = this.BaseLife * 2 * this.Level / 100 + 10 + this.Level;
+        this.Atk = this.BaseAtk * 2 * this.Level / 100 + 5;
+        this.Def = this.BaseDef * 2 * this.Level / 100 + 5;
+    }
+
     public LvlUp(numberOfLevels: number): number {
         this.Level += numberOfLevels;
+        this.updateStats();
         return this.Level;
     }
 
     public Clone(): Pokemon {
-        return new Pokemon(this.Id, this.Name, this.Types, this.Rariry, this.Level, this.Stage, this.Evolves, this.Description, this.TradeEvolve, this.UsesStone);
+        return new Pokemon(this.Id, this.Name, this.Types, this.Rariry, this.Level, this.Stage, this.Evolves, this.Description, this.TradeEvolve, this.UsesStone, this.Atk, this.Def, this.Life, this.availableMoves);
     }
 }
 
