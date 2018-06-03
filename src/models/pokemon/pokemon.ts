@@ -26,9 +26,12 @@ export class Pokemon {
         public availableMoves: Move[] = [Moves.Scratch, Moves.Pound]
     ) {
         this.Move = this.availableMoves[Math.floor(Math.random() * this.availableMoves.length)];
+        // leaving this in here becuase of editor beeing racist and not recognizing the function does this shit...
         this.Atk = BaseAtk;
         this.Def = BaseDef;
         this.Life = BaseLife;
+        // end racist crap
+        
         this.updateStats();
     }
 

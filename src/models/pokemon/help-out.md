@@ -36,9 +36,7 @@ export class Pokemon {
         public availableMoves: Move[] = [Moves.Scratch, Moves.Pound]
     ) {
         this.Move = this.availableMoves[Math.floor(Math.random() * this.availableMoves.length)];
-        this.Atk = BaseAtk;
-        this.Def = BaseDef;
-        this.Life = BaseLife;
+
         this.updateStats();
     }
 
