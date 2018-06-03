@@ -17,12 +17,12 @@ export class Pokemon {
         public Level: number = 1,
         public Stage: number = 1,
         public Evolves: number = 0,
-        public Description: string | null = null,
+        public Description: string = "The PokeDex doesn't have Data on this strange unknown Pokemon... Have you maybe found a new type of Pokemon?",
         public TradeEvolve: boolean = false,
         public UsesStone: boolean = false,
-        public BaseAtk: number = 25,
-        public BaseDef: number = 25,
-        public BaseLife: number = 100,
+        public BaseAtk: number = 40,
+        public BaseDef: number = 40,
+        public BaseLife: number = 40,
         public availableMoves: Move[] = [Moves.Scratch, Moves.Pound]
     ) {
         this.Move = this.availableMoves[Math.floor(Math.random() * this.availableMoves.length)];
@@ -110,7 +110,9 @@ export class Pokemon {
     }
 
     public Clone(): Pokemon {
-        return new Pokemon(this.Id, this.Name, this.Types, this.Rariry, this.Level, this.Stage, this.Evolves, this.Description, this.TradeEvolve, this.UsesStone, this.Atk, this.Def, this.Life, this.availableMoves);
+        const pkmn = new Pokemon(this.Id, this.Name, this.Types, this.Rariry, this.Level, this.Stage, this.Evolves, this.Description, this.TradeEvolve, this.UsesStone, this.Atk, this.Def, this.Life, this.availableMoves);
+        pkmn.Petname = this.Petname;
+        return pkmn;
     }
 }
 
