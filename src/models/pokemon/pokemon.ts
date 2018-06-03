@@ -113,7 +113,7 @@ export class Pokemon {
     }
 
     public Clone(): Pokemon {
-        const pkmn = new Pokemon(this.Id, this.Name, this.Types, this.Rariry, this.Level, this.Stage, this.Evolves, this.Description, this.TradeEvolve, this.UsesStone, this.Atk, this.Def, this.Life, this.availableMoves);
+        const pkmn = new Pokemon(this.Id, this.Name, this.Types, this.Rariry, this.Level, this.Stage, this.Evolves, this.Description, this.TradeEvolve, this.UsesStone, this.BaseAtk, this.BaseDef, this.BaseLife, this.availableMoves);
         pkmn.Petname = this.Petname;
         return pkmn;
     }
