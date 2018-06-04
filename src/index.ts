@@ -183,7 +183,7 @@ cb.onMessage(message => {
                         Messenger.sendSuccessMessage("Your Pokemon now fights with your foe's Pokemon! Wish em luck!", message.user);
                         Messenger.sendErrorMessage("Your Pokemon is being attacked by another Pokemon! Wish em luck!", splitMsg[1]);
                         
-                        const move = trainerManager.PokemonTrainers.get(splitMsg[1])!.Pokemon.Move;
+                        const move = trainerManager.PokemonTrainers.get(message.user)!.Pokemon.Move;
                         const currentHP = trainerManager.PokemonTrainers.get(splitMsg[1])!.Pokemon.Life;
                         const leftHP = trainerManager.PokemonTrainers.get(message.user)!.Pokemon.Attack(trainerManager.PokemonTrainers.get(splitMsg[1])!.Pokemon);
 
@@ -234,6 +234,7 @@ cb.onMessage(message => {
 cb.onTip(tip => {
     if (!trainerManager.PokemonTrainers.has(tip.from_user) && cb.settings.catch_pokemon <= tip.amount) {
         trainerManager.AddPokemonToTrainer(PokeDex.GetRandomPokemon(tip.amount), tip.from_user, tip.amount);
+        // Add notice, user received pokemon
     } else if (trainerManager.PokemonTrainers.has(tip.from_user) && trainerManager.PokemonTrainers.get(tip.from_user)!.BuyStoneConfirmation === true) {
         if (tip.amount === cb.settings.stone_price) {
             Messenger.sendInfoMessage("You just purchased a " + trainerManager.PokemonTrainers.get(tip.from_user)!.Pokemon.Types[0].Stone + "!", tip.from_user);
