@@ -118,7 +118,8 @@ export class Pokemon {
         return pkmn;
     }
 }
-
+// change to array of raw data and initialize only needed stuff.. why the heck did I even do this? :S
+//... same for the moves.. guess only the types remain so.. gotta think about a way to identify everything but should work well :)
 const InternPokemon = [
     new Pokemon(0, "MissingNo.", [Types.Normal], Rarity.Unobtainable, 1, 1, 0, "コメント さくせいちゅう", false, false),
     new Pokemon(1, "Bulbasaur", [Types.Grass,Types.Poison,], Rarity.Common, 1, 1, 16, "A strange seed was planted on its back at birth. The plant sprouts and grows with this Pokémon.", false, false, 49, 49, 45, [Moves.Tackle,Moves.Growl,Moves.LeechSeed,Moves.VineWhip,Moves.PoisonPowder,Moves.SleepPowder,Moves.TakeDown,Moves.RazorLeaf,Moves.SweetScent,Moves.Growth,Moves.DoubleEdge,Moves.WorrySeed,Moves.Synthesis,Moves.SeedBomb,Moves.Amnesia,Moves.Charm,Moves.Curse,Moves.Endure,Moves.GigaDrain,Moves.GrassWhistle,Moves.GrassyTerrain,Moves.Ingrain,Moves.LeafStorm,Moves.MagicalLeaf,Moves.NaturePower,Moves.PetalDance,Moves.PowerWhip,Moves.SkullBash,Moves.Sludge,]), // Pkmn #001
