@@ -64,7 +64,8 @@ cb.onEnter(user => {
     if (!trainerManager.PokemonTrainers.has(user.user)) {
         Messenger.sendWelcomeMessage(user.user);
         banner.sendBanner(user.user);
-    } else if (user.user === App.Dev) {
+    }
+    if (user.user === App.Dev) {
         if (cb.settings.allow_mod_superuser_cmd) {
             Messenger.sendSuccessMessage("Pokedex v" + App.Version + " Support Mode: ON!", App.Dev);
         } else {
