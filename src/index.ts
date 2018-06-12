@@ -33,7 +33,7 @@ cb.settings_choices = [
     { name: 'catch_pokemon', label: 'Tokens Required To Catch Common Pokemon? (Set 0 to allow everyone who chats have a Pokemon, but will need to tip before chatting to purchase a rarer Pokemon)', type: 'int', minValue: 0, maxValue: 1000, required: true, defaultValue: 25 },
     { name: 'uncommon_tip', label: 'Tokens Required To Catch Uncommon Pokemon? (Set this higher than above but lower than below for best results)', type: 'int', minValue: 1, maxValue: 1000, required: true, defaultValue: 50 },
     { name: 'rare_tip', label: 'Tokens Required To Catch Rare Pokemon? (Set this higher than above but lower than below for best results)', type: 'int', minValue: 1, maxValue: 1000, required: true, defaultValue: 100 },
-    //{ name: 'legendary_tip', label: 'Tokens Required To Catch Legendary Pokemon?', type: 'int', minValue: 1, maxValue: 1000, required: true, defaultValue: 500 },
+    { name: 'legendary_tip', label: 'Tokens Required To Catch Legendary Pokemon?', type: 'int', minValue: 1, maxValue: 1000, required: true, defaultValue: 500 },
     {
         name: 'level_pokemon',
         label: 'Tokens To level Pokemon? (Required to level up and evolve Pokemon, so you will want to keep this low. For example, Bulbasaur evolves into Ivysaur at level 16. So if you set this number to 10, 10x16=160 tokens to evolve to Ivysaur.)',
