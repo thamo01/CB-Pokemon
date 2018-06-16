@@ -101,6 +101,8 @@ export default class Game {
                     this.trainerManager.ChangePokemonOfUser(splitMsg[1]);
                 } else if (message.m.substring(1, 7) === this.config.CMDS.REMOVE) {
                     this.trainerManager.RemovePokemonFromTrainer(splitMsg[1]);
+                } else if (message.m.substring(1, 8) === this.config.CMDS.LEVELUP) {
+                    this.trainerManager.LevelUpPokemonOfUser(splitMsg[1], 25);
                 } else {
                     //handle nonsense commands
                 }
