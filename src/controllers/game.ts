@@ -39,13 +39,13 @@ export default class Game {
                 defaultValue: 10
             },
             { name: 'stone_price', label: 'Tokens Required To Purchase An Evolution Stone? (Some Pokemon, like Pikachu, require stones to evolve. Set the price of the stones here. "/buystone" will allow users to purchase a stone. Broadcasters do not need to buy stones. Just type "/buystone".', type: 'int', minValue: 1, maxValue: 1000, required: true, defaultValue: 200 },
-            { name: 'elite_four_1', label: 'Choose your first member of your personal elite four! Insert the username of the one you choose as elite four member. (your mods for example, or the developer of this bot)', type: 'str', defaultValue: ""},
+            { name: 'elite_four_1', label: 'Choose your first member of your personal elite four! Insert the username of the one you choose as elite four member. (your mods for example, or the developer of this bot)', type: 'str', required: false, defaultValue: ""},
             { name: 'elite_four_1_pokemon', label: 'Choose your first elite four members pokemon. Choose wisely. (Maybe one of the legendary birds, 144, 145, 146?)', type: 'int', minValue: 0, maxValue: 151, required: true, defaultValue: 144 },
-            { name: 'elite_four_2', label: 'Choose your second member of your personal elite four!', type: 'str', defaultValue: "" },
+            { name: 'elite_four_2', label: 'Choose your second member of your personal elite four!', type: 'str', required: false, defaultValue: "" },
             { name: 'elite_four_2_pokemon', label: 'Choose your second elite four members pokemon.', type: 'int', minValue: 0, maxValue: 151, required: true, defaultValue: 145 },
-            { name: 'elite_four_3', label: 'Choose your third member of your personal elite four!', type: 'str', defaultValue: "" },
+            { name: 'elite_four_3', label: 'Choose your third member of your personal elite four!', type: 'str', required: false, defaultValue: "" },
             { name: 'elite_four_3_pokemon', label: 'Choose your third elite four members pokemon.', type: 'int', minValue: 0, maxValue: 151, required: true, defaultValue: 146 },
-            { name: 'elite_four_4', label: 'Choose your fourth member of your personal elite four and complete the list!', type: 'str', defaultValue: "" },
+            { name: 'elite_four_4', label: 'Choose your fourth member of your personal elite four and complete the list!', type: 'str', required: false, defaultValue: "" },
             { name: 'elite_four_4_pokemon', label: 'Choose your fourth elite four members pokemon.', type: 'int', minValue: 0, maxValue: 151, required: true, defaultValue: 150 },
         ];
         cb.settings.allow_mod_superuser_cmd = parseBoolean(cb.settings.mod_allow_broadcaster_cmd);
@@ -54,20 +54,22 @@ export default class Game {
     private initBroadcaster() {
         if (cb.settings.broadcaster_pokemon !== 0) {
             this.trainerManager.AddPokemonToTrainer(cb.settings.broadcaster_pokemon, cb.room_slug, 0);
-            this.trainerManager.PokemonTrainers.get(cb.room_slug)!.Pokemon.Level = 200;
-            this.trainerManager.PokemonTrainers.get(cb.room_slug)!.Pokemon.updateStats();
+            if (this.trainerManager.PokemonTrainers.has(cb.room_slug)) {
+                this.trainerManager.PokemonTrainers.get(cb.room_slug)!.Pokemon.Level = 200;
+                this.trainerManager.PokemonTrainers.get(cb.room_slug)!.Pokemon.updateStats();
+            }
         }
 
-        if ((<string>cb.settings.elite_four_1).length > 0 && cb.settings.elite_four_1_pokemon !== 0) {
+        if (cb.settings.elite_four_1 !== undefined && cb.settings.elite_four_1.length > 0 && cb.settings.elite_four_1_pokemon !== 0) {
             this.trainerManager.AddPokemonToTrainer(cb.settings.elite_four_1_pokemon, cb.settings.elite_four_1, 0);
         }
-        if ((<string>cb.settings.elite_four_2).length > 0 && cb.settings.elite_four_2_pokemon !== 0) {
+        if (cb.settings.elite_four_2 !== undefined && cb.settings.elite_four_2.length > 0 && cb.settings.elite_four_2_pokemon !== 0) {
             this.trainerManager.AddPokemonToTrainer(cb.settings.elite_four_2_pokemon, cb.settings.elite_four_2, 0);
         }
-        if ((<string>cb.settings.elite_four_3).length > 0 && cb.settings.elite_four_3_pokemon !== 0) {
+        if (cb.settings.elite_four_3 !== undefined && cb.settings.elite_four_3.length > 0 && cb.settings.elite_four_3_pokemon !== 0) {
             this.trainerManager.AddPokemonToTrainer(cb.settings.elite_four_3_pokemon, cb.settings.elite_four_3, 0);
         }
-        if ((<string>cb.settings.elite_four_4).length > 0 && cb.settings.elite_four_4_pokemon !== 0) {
+        if (cb.settings.elite_four_4 !== undefined && cb.settings.elite_four_4.length > 0 && cb.settings.elite_four_4_pokemon !== 0) {
             this.trainerManager.AddPokemonToTrainer(cb.settings.elite_four_4_pokemon, cb.settings.elite_four_4, 0);
         }
     }
@@ -199,10 +201,10 @@ export default class Game {
                     if (this.trainerManager.PokemonTrainers.has(message.user)) {
                         if (message.user === splitMsg[1]) {
                             Messenger.sendErrorMessage("Your Pokemon can't attack itself now, can it? Do you have weird fetishes...?", message.user);
+                        } else if(splitMsg[1] === cb.room_slug && this.isEliteFourMember(message.user)) {
+                            Messenger.sendErrorMessage("Hey now.. you are a member of the Elite Four, you shouldn't fight against " + cb.room_slug, message.user);
                         } else if(splitMsg[1] === cb.room_slug && !this.eliteFourDefeated()) {
                             Messenger.sendErrorMessage("Wow, woah.. Calm down little fellow trainer. You can't just head to the final boss before beating the Elite Four!", message.user);
-                        } else if(splitMsg[1] === cb.room_slug && this.isEliteFourMember(message.user)) {
-                            Messenger.sendErrorMessage("Hey now.. you are a membre of the Elite Four, you should fight against " + cb.room_slug, message.user);
                         } else {
                             Messenger.sendSuccessMessage("Your Pokemon now fights with your foe's Pokemon! Wish em luck!", message.user);
                             Messenger.sendErrorMessage("Your Pokemon is being attacked by another Pokemon! Wish em luck!", splitMsg[1]);
