@@ -6,13 +6,6 @@ import Messenger from "./messenger";
 export default class TrainerManager {
     public PokemonTrainers: Map<string, PokemonTrainer> = new Map<string, PokemonTrainer>();
 
-    public constructor() {
-        //Set Broadcasters pokemon...
-        if (cb.settings.broadcaster_pokemon !== 0) {
-            this.AddPokemonToTrainer(cb.settings.broadcaster_pokemon, cb.room_slug, 0);
-        }
-    }
-
     public AddPokemonToTrainer(pokeDexID: number, user: string, tipped: number = 0) {
         let origin = Pokemons[pokeDexID];
         if (origin !== undefined) {
@@ -37,7 +30,9 @@ export default class TrainerManager {
     public EvolvePokemonOfUser(user: string) {
         const oldPokemon = this.PokemonTrainers.get(user)!.Pokemon;
         const newPokemon = Pokemons[oldPokemon.Id+1].Clone();
-        newPokemon.Level = oldPokemon.Level;
+        if (newPokemon.Level < oldPokemon.Level) {
+            newPokemon.Level = oldPokemon.Level;
+        }
         newPokemon.Petname = oldPokemon.Petname;
         newPokemon.updateStats();
 

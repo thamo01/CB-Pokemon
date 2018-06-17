@@ -12,6 +12,8 @@ const App = {
         CHANGE: "change",
         REMOVE: "remove",
         RELEASE: "release",
+        LISTTRAINERS: "listtrainers",
+        LISTELITEFOUR: "listelitefour",
         IDENTIFY: "identify",
         SUPPORT: "support",
         BUYSTONE: "buystone",
