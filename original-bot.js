@@ -1,6 +1,6 @@
 var Application = {
     Name: "Chaturbate Pokedex", // The name of the application
-    Version: 0.23, // The current version of the application
+    Version: 0.28, // The current version of the application
     Author: "asudem", // The author of this version.  Don't change this unless you modified something!
     OriginalAuthor: "asudem", // The original author, I.E. me.  If you change this, you're a cunt.  It's not like it gets displayed anywhere
     Debug: false, // Whether the application is in debug (verbose) mode.
@@ -159,7 +159,7 @@ var pokedex = {
         { name: "Kingler", entry: "The large pincer has 10000 hp of crushing power. However, its huge size makes it unwieldy to use.", rarity: rarity.uncommon, stage: 2, evolves: 0, type: types.water },
         { name: "Voltorb", entry: "Usually found in power plants. Easily mistaken for a Poké Ball, they have zapped many people.", rarity: rarity.common, stage: 1, evolves: 30, type: types.electric },
         { name: "Electrode", entry: "It stores electric energy under very high pressure. It often explodes with little or no provocation.", rarity: rarity.uncommon, stage: 2, evolves: 0, type: types.electric },
-        { name: "Exeggcute", entry:"Often mistaken for eggs. When disturbed, they quickly gather and attack in swarms.", rarity: rarity.common, stage: 1, evolves: 0, type: types.grass, uses_stone: true },
+        { name: "Exeggcute", entry: "Often mistaken for eggs. When disturbed, they quickly gather and attack in swarms.", rarity: rarity.common, stage: 1, evolves: 0, type: types.grass, uses_stone: true },
         { name: "Exeggutor", entry: "Legend has it that on rare occasions, one of its heads will drop off and continue on as an EXEGGCUTE.", rarity: rarity.uncommon, stage: 2, evolves: 0, type: types.psychic },
         { name: "Cubone", entry: "Because it never removes its skull helmet, no one has ever seen this POKéMON's real face.", rarity: rarity.common, stage: 1, evolves: 28, type: types.ground },
         { name: "Marowak", entry: "The bone it holds is its key weapon. It throws the bone skillfully like a boomerang to KO targets.", rarity: rarity.uncommon, stage: 2, evolves: 0, type: types.ground },
@@ -167,33 +167,78 @@ var pokedex = {
         { name: "Hitmonchan", entry: "While apparently doing nothing, it fires punches in lightning fast volleys that are impossible to see.", rarity: rarity.rare, stage: 1, evolves: 0, type: types.fighting },
         { name: "Lickitung", entry: "Its tongue can be extended like a chameleon's. It leaves a tingling sensation when it licks enemies.", rarity: rarity.uncommon, stage: 1, evolves: 0, type: types.normal },
         { name: "Koffing", entry: "Because it stores several kinds of toxic gases in its body, it is prone to exploding without warning.", rarity: rarity.common, stage: 1, evolves: 35, type: types.poison },
-        { name: "Weezing", entry: "Where two kinds of poison gases meet, 2 KOFFINGs can fuse into a WEEZING over many years.", rarity: rarity.uncommon, stage: 2, evolves: 0, type: types.poison}
+        { name: "Weezing", entry: "Where two kinds of poison gases meet, 2 KOFFINGs can fuse into a WEEZING over many years.", rarity: rarity.uncommon, stage: 2, evolves: 0, type: types.poison },
+        { name: "Rhyhorn", entry: "Its massive bones are 1000 times harder than human bones. It can easily knock a trailer flying.", rarity: rarity.uncommon, stage: 1, evolves: 42, type: types.ground },
+        { name: "Rhydon", entry: "Protected by an armor-like hide, it is capable of living in molten lava of 3,600 degrees.", rarity: rarity.rare, stage: 2, evolves: 0, type: types.rock },
+        { name: "Chansey", entry: "A rare and elusive POKéMON that is said to bring happiness to those who manage to get it.", rarity: rarity.rare, stage: 1, evolves: 0, type: types.normal },
+        { name: "Tangela", entry: "The whole body is swathed with wide vines that are similar to seaweed. Its vines shake as it walks.", rarity: rarity.common, stage: 1, evolves: 0, type: types.grass },
+        { name: "Kangaskhan", entry: "The infant rarely ventures out of its mother's protective pouch until it is 3 years old.", rarity: rarity.rare, stage: 1, evolves: 0, type: types.normal },
+        { name: "Horsea", entry: "Known to shoot down flying bugs with precision blasts of ink from the surface of the water.", rarity: rarity.common, stage: 1, evolves: 32, type: types.water },
+        { name: "Seadra", entry: "Capable of swimming backwards by rapidly flapping its wing-like pectoral fins and stout tail.", rarity: rarity.uncommon, stage: 2, evolves: 0, type: types.water },
+        { name: "Goldeen", entry: "Its tail fin billows like an elegant ballroom dress, giving it the nickname of the Water Queen.", rarity: rarity.common, stage: 1, evolves: 33, type: types.water },
+        { name: "Seaking", entry: "In the autumn spawning season, they can be seen swimming powerfully up rivers and creeks.", rarity: rarity.uncommon, stage: 2, evolves: 0, type: types.water },
+        { name: "Staryu", entry: "An enigmatic POKéMON that can effortlessly regenerate any appendage it loses in battle.", rarity: rarity.uncommon, stage: 1, evolves: 0, type: types.water, uses_stone: true },
+        { name: "Starmie", entry: "Its central core glows with the seven colors of the rainbow. Some people value the core as a gem.", rarity: rarity.rare, stage: 2, evolves: 0, type: types.psychic },
+        { name: "Mr. Mime", entry: "If interrupted while it is miming, it will slap around the offender with its broad hands.", rarity: rarity.uncommon, stage: 1, evolves: 0, type: types.psychic },
+        { name: "Scyther", entry: "With ninja-like agility and speed, it can create the illusion that there is more than one.", rarity: rarity.rare, stage: 1, evolves: 0, type: types.bug },
+        { name: "Jynx", entry: "It seductively wiggles its hips as it walks. It can cause people to dance in unison with it.", rarity: rarity.uncommon, stage: 1, evolves: 0, type: types.psychic },
+        { name: "Electabuzz", entry: "Normally found near power plants, they can wander away and cause major blackouts in cities.", rarity: rarity.rare, stage: 1, evolves: 0, type: types.electric },
+        { name: "Magmar", entry: "Its body always burns with an orange glow that enables it to hide perfectly among flames.", rarity: rarity.uncommon, stage: 1, evolves: 0, type: types.fire },
+        { name: "Pinsir", entry: "If it fails to crush the victim in its pincers, it will swing it around and toss it hard.", rarity: rarity.rare, stage: 1, evolves: 0, type: types.bug },
+        { name: "Tauros", entry: "When it targets an enemy, it charges furiously while whipping its body with its long tails.", rarity: rarity.rare, stage: 1, evolves: 0, type: types.normal },
+        { name: "Magikarp", entry: "In the distant past, it was somewhat stronger than the horribly weak descendants that exist today.", rarity: rarity.common, stage: 1, evolves: 20, type: types.water },
+        { name: "Gyarados", entry: "Rarely seen in the wild. Huge and vicious, it is capable of destroying entire cities in a rage.", rarity: rarity.uncommon, stage: 2, evolves: 0, type: types.water },
+        { name: "Lapras", entry: "A POKéMON that has been overhunted almost to extinction. It can ferry people across the water.", rarity: rarity.uncommon, stage: 1, evolves: 0, type: types.water },
+        { name: "Ditto", entry: "Capable of copying an enemy's genetic code to instantly transform itself into a duplicate of the enemy.", rarity: rarity.uncommon, stage: 1, evolves: 0, type: types.normal },
+        { name: "Eevee", entry: "Its genetic code is irregular. It may mutate if it is exposed to radiation from element STONEs.", rarity: rarity.uncommon, stage: 1, evolves: 0, type: types.normal, uses_stone: true, is_eevee: true },
+        { name: "Vaporeon", entry: "Lives close to water. Its long tail is ridged with a fin which is often mistaken for a mermaid's.", rarity: rarity.rare, stage: 2, evolves: 0, type: types.water },
+        { name: "Jolteon", entry: "It accumulates negative ions in the atmosphere to blast out 10000-volt lightning bolts.", rarity: rarity.rare, stage: 2, evolves: 0, type: types.electric },
+        { name: "Flareon", entry: "When storing thermal energy in its body, its temperature could soar to over 1600 degrees.", rarity: rarity.rare, stage: 2, evolves: 0, type: types.fire },
+        { name: "Porygon", entry: "A POKéMON that consists entirely of programming code. Capable of moving freely in cyberspace.", rarity: rarity.rare, stage: 1, evolves: 0, type: types.normal },
+        { name: "Omanyte", entry: "Although long extinct, in rare cases, it can be genetically resurrected from fossils.", rarity: rarity.uncommon, stage: 1, evolves: 40, type: types.water },
+        { name: "Omastar", entry: "A prehistoric POKéMON that died out when its heavy shell made it impossible to catch prey.", rarity: rarity.rare, stage: 2, evolves: 0, type: types.rock },
+        { name: "Kabuto", entry: "A POKéMON that was resurrected from a fossil found in what was once the ocean floor eons ago.", rarity: rarity.uncommon, stage: 1, evolves: 40, type: types.water },
+        { name: "Kabutops", entry: "Its sleek shape is perfect for swimming. It slashes prey with its claws and drains the body fluids.", rarity: rarity.rare, stage: 2, evolves: 0, type: types.rock },
+        { name: "Aerodactyl", entry: "A ferocious, prehistoric POKéMON that goes for the enemy's throat with its serrated saw-like fangs.", rarity: rarity.rare, stage: 1, evolves: 0, type: types.flying },
+        { name: "Snorlax", entry: "Very lazy. Just eats and sleeps. As its rotund bulk builds, it becomes steadily more slothful.", rarity: rarity.uncommon, stage: 1, evolves: 0, type: types.normal },
+        { name: "Articuno", entry: "A legendary bird POKéMON that is said to appear to doomed people who are lost in icy mountains.", rarity: rarity.legendary, stage: 1, evolves: 0, type: types.ice },
+        { name: "Zapdos", entry: "A legendary bird POKéMON that is said to appear from clouds while dropping enormous lightning bolts.", rarity: rarity.legendary, stage: 1, evolves: 0, type: types.electric },
+        { name: "Moltres", entry: "Known as the legendary bird of fire. Every flap of its wings creates a dazzling flash of flames.", rarity: rarity.legendary, stage: 1, evolves: 0, type: types.fire },
+        { name: "Dratini", entry: "Long considered a mythical POKéMON until recently when a small colony was found living underwater.", rarity: rarity.uncommon, stage: 1, evolves: 30, type: types.dragon },
+        { name: "Dragonair", entry: "A mystical POKéMON that exudes a gentle aura. Has the ability to change climate conditions.", rarity: rarity.rare, stage: 2, evolves: 55, type: types.dragon },
+        { name: "Dragonite", entry: "An extremely rarely seen marine POKéMON. Its intelligence is said to match that of humans.", rarity: rarity.legendary, stage: 3, evolves: 0, type: types.dragon },
+        { name: "Mewtwo", entry: "It was created by a scientist after years of horrific gene splicing and DNA engineering experiments.", rarity: rarity.legendary, stage: 1, evolves: 0, type: types.psychic },
+        { name: "Mew", entry: "So rare that it is still said to be a mirage by many experts. Only a few people have seen it worldwide.", rarity: rarity.unobtainable, stage: 1, evolves: 0, type: types.psychic }
 
     ],
 
-    identify: function (num) {
+    identify: function(num) {
         try {
             return 'Pokedex Entry #' + eval(num) + ' : ' + this.icon(num) + ' ' + this.data[num].name + ' - ' +
                 this.data[num].rarity.type + ' - ' + this.data[num].entry;
         } catch (err) {
             return 'The user does not have a Pokemon.';
             //return err;
+
         }
     },
+    evolve_check: function(num, user) {
 
-    evolve_check: function (num, user) {
         if (this.data[num].uses_stone !== undefined) {
-            Messenger.sendInfoMessage(this.data[num].name + " evolves using a " + this.data[num].type.stone + ". To buy a stone, use the command '/buystone' to purchase one!", user, null);
+            Messenger.sendInfoMessage(this.data[num].name + " evolves using an Evolution Stone. To buy a stone, use the command '/buystone' to purchase one!", user, null);
         } else if (this.data[num].trade_evolve !== undefined) {
             Messenger.sendInfoMessage(this.data[num].name + " evolves by trading with another user. To trade with someone, use the command '/trade'!", user, null);
+        } else if (this.data[num].is_eevee !== undefined) {
+            //Tell User How Eevee evolves
         }
     },
 
-    icon: function (num) {
+    icon: function(num) {
         var s = num + "";
         while (s.length < 3) s = "0" + s;
         return ':pkmn' + s;
     }
+
 
 };
 
@@ -201,12 +246,12 @@ var pokemonUsers = {};
 var currentlyTrading = {};
 
 var users = {
-    init: function () {
+    init: function() {
         if (cb.settings.broadcaster_pokemon !== 0) {
             this.add(cb.room_slug, cb.settings.broadcaster_pokemon, 0);
         }
     },
-    add: function (user, num, tipped) {
+    add: function(user, num, tipped) {
         try {
             pokemonUsers[user] = { pokemon: parseInt(num), totaltips: parseInt(tipped), level: 1 };
             Messenger.sendInfoMessage("Congrats! You just caught a " + pokedex.data[num].name + "!", user, null);
@@ -217,22 +262,42 @@ var users = {
 
         }
     },
-    remove: function (user) {
+    remove: function(user) {
         delete pokemonUsers[user];
     },
-    levelUp: function (user, numlevels) {
+    levelUp: function(user, numlevels) {
         pokemonUsers[user].level += numlevels;
         while (pokemonUsers[user].level >= pokedex.data[pokemonUsers[user].pokemon].evolves && pokedex.data[pokemonUsers[user].pokemon].evolves != 0) {
             this.evolve(user);
         }
 
     },
-    evolve: function (user) {
-        Messenger.sendInfoMessage("Your " + pokedex.icon(pokemonUsers[user].pokemon) + " " + pokedex.data[pokemonUsers[user].pokemon].name + " has evolved into a " + pokedex.icon(pokemonUsers[user].pokemon + 1) + " " + pokedex.data[pokemonUsers[user].pokemon + 1].name + "!", user);
-        pokemonUsers[user].pokemon += 1;
+    evolve: function(user) {
+
+        if (pokedex.data[pokemonUsers[user].pokemon].is_eevee !== undefined) {
+            if (pokemonUsers[user].water_stone !== undefined) {
+                Messenger.sendInfoMessage("Your " + pokedex.icon(pokemonUsers[user].pokemon) + " " + pokedex.data[pokemonUsers[user].pokemon].name + " has evolved into a " + pokedex.icon(pokemonUsers[user].pokemon + 1) + " " + pokedex.data[pokemonUsers[user].pokemon + 1].name + "!", user);
+                pokemonUsers[user].pokemon += 1;
+            } else if (pokemonUsers[user].thunder_stone !== undefined) {
+                Messenger.sendInfoMessage("Your " + pokedex.icon(pokemonUsers[user].pokemon) + " " + pokedex.data[pokemonUsers[user].pokemon].name + " has evolved into a " + pokedex.icon(pokemonUsers[user].pokemon + 2) + " " + pokedex.data[pokemonUsers[user].pokemon + 2].name + "!", user);
+                pokemonUsers[user].pokemon += 2;
+            } else if (pokemonUsers[user].fire_stone !== undefined) {
+                Messenger.sendInfoMessage("Your " + pokedex.icon(pokemonUsers[user].pokemon) + " " + pokedex.data[pokemonUsers[user].pokemon].name + " has evolved into a " + pokedex.icon(pokemonUsers[user].pokemon + 3) + " " + pokedex.data[pokemonUsers[user].pokemon + 3].name + "!", user);
+                pokemonUsers[user].pokemon += 2;
+            } else {
+                Messenger.sendInfoMessage("E R R O R: `M[]", user);
+                pokemonUsers[user].pokemon = 0;
+            }
+
+        } else {
+            Messenger.sendInfoMessage("Your " + pokedex.icon(pokemonUsers[user].pokemon) + " " + pokedex.data[pokemonUsers[user].pokemon].name + " has evolved into a " + pokedex.icon(pokemonUsers[user].pokemon + 1) + " " + pokedex.data[pokemonUsers[user].pokemon + 1].name + "!", user);
+            pokemonUsers[user].pokemon += 3;
+        }
+
+
         pokedex.evolve_check(pokemonUsers[user].pokemon, user);
     },
-    trade: function (initiator, reciever) {
+    trade: function(initiator, reciever) {
         if (initiator === reciever) {
             Messenger.sendErrorMessage("Playing with yourself on an adult website?", initiator);
         } else if (pokemonUsers[initiator] === undefined) {
@@ -258,7 +323,7 @@ var users = {
 
 
     },
-    change: function (user) {
+    change: function(user) {
         var oldPkmn = pokemonUsers[user].pokemon;
         pokemonUsers[user].pokemon = getRandomPokemon(pokemonUsers[user].totaltips);
         Messenger.sendInfoMessage("Your " + pokedex.data[oldPkmn].name + " has been swapped for a " + pokedex.data[pokemonUsers[user].pokemon].name + ".", user);
@@ -280,40 +345,42 @@ function loopObjects(object) {
 
 if (cb == null) {
     var cb = {
-        changeRoomSubject: function (new_subject) {},
-        drawPanel: function () {},
-        log: function (message) {},
-        onDrawPanel: function (func) {},
-        onEnter: function (func) {},
-        onLeave: function (func) {},
-        onMessage: function (func) {},
-        onShowStatus: function (func) {},
-        onTip: function (func) {},
+        changeRoomSubject: function(new_subject) {},
+        drawPanel: function() {},
+        log: function(message) {},
+        onDrawPanel: function(func) {},
+        onEnter: function(func) {},
+        onLeave: function(func) {},
+        onMessage: function(func) {},
+        onShowStatus: function(func) {},
+        onTip: function(func) {},
         room_slug: '',
-        sendNotice: function (message, to_user, background, foreground, weight, to_group) {},
-        setTimeout: function (func, msec) {},
+        sendNotice: function(message, to_user, background, foreground, weight, to_group) {},
+        setTimeout: function(func, msec) {},
         settings_choices: [],
         settings: {},
-        tipOptions: function (func) {},
-        limitCam_start: function (message, allowed_users) {},
-        limitCam_stop: function () {},
-        limitCam_addUsers: function (allowed_users) {},
-        limitCam_removeUsers: function (removed_users) {},
-        limitCam_removeAllUsers: function () {},
-        limitCam_userHasAccess: function (user) {},
-        limitCam_allUsersWithAccess: function () {},
-        limitCam_isRunning: function () {},
+        tipOptions: function(func) {},
+        limitCam_start: function(message, allowed_users) {},
+        limitCam_stop: function() {},
+        limitCam_addUsers: function(allowed_users) {},
+        limitCam_removeUsers: function(removed_users) {},
+        limitCam_removeAllUsers: function() {},
+        limitCam_userHasAccess: function(user) {},
+        limitCam_allUsersWithAccess: function() {},
+        limitCam_isRunning: function() {},
     };
 }
 
 cb.settings_choices = [
     { name: 'mod_allow_broadcaster_cmd', label: 'Allow mods and the developer to use commands? (Useful if you need a little extra help)', type: 'choice', choice1: 'Yes', choice2: 'No', defaultValue: 'Yes' },
+    { name: 'spam_block', label: '[EXPERIMENTAL] Adds experimental spam/scam blocking to chat as a filter', type: 'choice', choice1: 'Yes', choice2: 'No', defaultValue: 'No' },
+
     { name: 'banner_rotate', label: 'How often, in seconds, should the Pokedex price banner rotate', type: 'int', minValue: 30, maxValue: 1800, required: true, defaultValue: 120 },
     { name: 'broadcaster_pokemon', label: 'Broadcaster Has Specific Pokemon? (This is the Pokemon you start with. Set 1 to get Bulbasaur, set 25 to get Pikachu, etc... Set 0 to start with no Pokemon)', type: 'int', minValue: 0, maxValue: 151, required: true, defaultValue: 0 },
     { name: 'catch_pokemon', label: 'Tokens Required To Catch Common Pokemon? (Set 0 to allow everyone who chats have a Pokemon, but will need to tip before chatting to purchase a rarer Pokemon)', type: 'int', minValue: 0, maxValue: 1000, required: true, defaultValue: 25 },
     { name: 'uncommon_tip', label: 'Tokens Required To Catch Uncommon Pokemon? (Set this higher than above but lower than below for best results)', type: 'int', minValue: 1, maxValue: 1000, required: true, defaultValue: 50 },
     { name: 'rare_tip', label: 'Tokens Required To Catch Rare Pokemon? (Set this higher than above but lower than below for best results)', type: 'int', minValue: 1, maxValue: 1000, required: true, defaultValue: 100 },
-    //{ name: 'legendary_tip', label: 'Tokens Required To Catch Legendary Pokemon?', type: 'int', minValue: 1, maxValue: 1000, required: true, defaultValue: 500 },
+    { name: 'legendary_tip', label: 'Tokens Required To Catch Legendary Pokemon?', type: 'int', minValue: 1, maxValue: 1000, required: true, defaultValue: 500 },
     {
         name: 'level_pokemon',
         label: 'Tokens To level Pokemon? (Required to level up and evolve Pokemon, so you will want to keep this low. For example, Bulbasaur evolves into Ivysaur at level 16. So if you set this number to 10, 10x16=160 tokens to evolve to Ivysaur.)',
@@ -341,10 +408,10 @@ var tipper_colours = {
 var settings = {
     allow_mod_superuser_cmd: false,
     support_mode: false,
-    toString: function () {
+    toString: function() {
         var settingsStr = "";
         for (var prop in this) {
-            if (typeof (this[prop]) == "string" || typeof (this[prop]) == "boolean" || typeof (this[prop]) == "number") {
+            if (typeof(this[prop]) == "string" || typeof(this[prop]) == "boolean" || typeof(this[prop]) == "number") {
                 settingsStr += ", " + prop + ": '" + this[prop] + "'";
             }
         }
@@ -354,25 +421,25 @@ var settings = {
 };
 
 var Messenger = {
-    sendBroadcasterNotice: function (str) { // <- This is a Pokedex added feature, please do not use this elsewhere ~Asudem
+    sendBroadcasterNotice: function(str) { // <- This is a Pokedex added feature, please do not use this elsewhere ~Asudem
         cb.sendNotice("[Pokedex Bot Dev Notice]: " + str, cb.room_slug, "#ffff66", "#9216ff", 'bolder', null);
     },
-    sendModeratorNotice: function (str) {
+    sendModeratorNotice: function(str) {
         this.sendGenericMessage(str, Colours.Blue, null, cb.room_slug, Groups.Moderators);
     },
-    sendErrorMessage: function (str, recipient, group) {
+    sendErrorMessage: function(str, recipient, group) {
         this.sendGenericMessage(str, Colours.Red, null, recipient, group);
     },
-    sendWarningMessage: function (str, recipient, group) {
+    sendWarningMessage: function(str, recipient, group) {
         this.sendGenericMessage(str, Colours.Orange, null, recipient, group);
     },
-    sendSuccessMessage: function (str, recipient, group) {
+    sendSuccessMessage: function(str, recipient, group) {
         this.sendGenericMessage(str, Colours.DarkGreen, null, recipient, group);
     },
-    sendInfoMessage: function (str, recipient, group) {
+    sendInfoMessage: function(str, recipient, group) {
         this.sendGenericMessage(str, Colours.Black, null, recipient, group);
     },
-    sendGenericMessage: function (str, colour, background, recipient, group) {
+    sendGenericMessage: function(str, colour, background, recipient, group) {
         if (recipient != null && group != null) {
             cb.sendNotice(str, null, background, colour, 'bold', group);
             cb.sendNotice(str, recipient, background, colour, 'bold', null);
@@ -388,7 +455,48 @@ function debugLog(message) {
     if (Application.Debug) cb.log("[{0}] TMG: {1}".format(new Date().toString(), message));
 }
 
-cb.onMessage(function (msg) {
+cb.onMessage(function(msg) {
+    //[EXPERIMENTAL] Spam detection
+    if (settingsHelper.parseBoolean(cb.settings.spam_block)) {
+        var actual_spam = ["free Sex in your city --> sexcom.me", "Look at", "Me Boys", "Hot sex chat in your town --> sexcom.me", "Look", "View my", "cam", "Watch", "c2c", "C 2 C", "Boys", "Look at my room. Boys"]
+        for (var i = 0, len = actual_spam.length; i < len; i++) {
+            if (msg.m.toUpperCase() == actual_spam[i].toUpperCase()) {
+                msg["X-Spam"] = true;
+            }
+        }
+    }
+
+    if (cb.room_slug == "choke_angel") {
+        if (msg.user === cb.room_slug) {
+            if (msg.m == "-------- My toy accidentally disconnected. It should automatically reconnect. Tips given now will be added to the queue." || msg.m == "-------- The model's Lovense toy has connected.") {
+                msg["X-Spam"] = true;
+                msg.c = '#FFFFFF';
+                msg.background = '#FFFFFF';
+            }
+        }
+        if (settingsHelper.parseBoolean(cb.settings.spam_block)) {
+            //User Has Tokens?
+            if (msg.has_tokens || msg.user == cb.room_slug) {
+                //YES
+            } else {
+                //NO
+                //DEBUG - See the real message
+                cb.log(msg.m);
+                //Split message into array
+                var msgArray = msg.m.split(" ");
+                //Meow storage array
+                var meows = [''];
+                //For each word in the message array
+                for (var i = 0; i < msgArray.length; i++) {
+                    //Add meows
+                    meows.push('meow');
+
+                }; //end of FOR [For each word in the message array]
+                //Change message to meows
+                msg.m = meows.join(' ').trim();
+            }; //end of IF [User Has Tokens?]
+        }
+    }
 
     ///Get rid of non-Pokemon emoticon if it's before a command
     if (msg.m.trim().startsWith(':') && msg.m.indexOf('/') > -1) {
@@ -396,10 +504,11 @@ cb.onMessage(function (msg) {
         if (splitMsg[1].indexOf('/') === 0) {
             msg.m = msg.m.trim().substring(msg.m.indexOf('/'), msg.m.length).trim();
         }
+
     }
 
     if (msg.m.substring(0, 8) === "--------" || msg.m.substring(0, 8) === "********") {
-        if (msg.user === "choke_angel" || msg.user === "thenaughtywho") {
+        if (msg.user === "thenaughtywho") {
             msg["X-Spam"] = true;
             msg.c = '#FFFFFF';
             msg.background = '#FFFFFF';
@@ -477,7 +586,32 @@ cb.onMessage(function (msg) {
             }
 
         } else if (msg.m.substring(1, 9) === "buystone") {
-            if (pokedex.data[pokemonUsers[msg.user].pokemon].uses_stone !== undefined) {
+
+            if (pokedex.data[pokemonUsers[msg.user].pokemon].is_eevee !== undefined) {
+
+
+                if (pokemonUsers[msg.user]["buystone_warning"] === true) {
+                    cb.log()
+                    if (msg.m.substring(10, 11) === "w") {
+                        Messenger.sendInfoMessage("Okay, your next tip of " + cb.settings.stone_price + " tokens will buy you a " + types.water.stone, msg.user);
+                        pokemonUsers[msg.user]["buystone_confirm"] = true;
+                        pokemonUsers[msg.user]["water_stone"] = true;
+                    } else if (msg.m.substring(10, 11) === "f") {
+                        Messenger.sendInfoMessage("Okay, your next tip of " + cb.settings.stone_price + " tokens will buy you a " + types.fire.stone, msg.user);
+                        pokemonUsers[msg.user]["buystone_confirm"] = true;
+                        pokemonUsers[msg.user]["fire_stone"] = true;  
+                    } else if (msg.m.substring(10, 11) === "t") {
+                        Messenger.sendInfoMessage("Okay, your next tip of " + cb.settings.stone_price + " tokens will buy you a " + types.electric.stone, msg.user);
+                        pokemonUsers[msg.user]["buystone_confirm"] = true;
+                        pokemonUsers[msg.user]["thunder_stone"] = true;
+                    }
+
+                } else {
+                    Messenger.sendInfoMessage("It costs " + cb.settings.stone_price + " tokens to purchase a stone for Eevee. Type '/buystone w' for a Water Stone, '/buystone f' for a Fire Stone, and type 'buystone t' for a Thunder Stone and your next tip of " + cb.settings.stone_price + " tokens will buy you a stone for your Eevee!", msg.user);
+                    pokemonUsers[msg.user]["buystone_warning"] = true;
+                }
+
+            } else if (pokedex.data[pokemonUsers[msg.user].pokemon].uses_stone !== undefined) {
 
                 if (pokemonUsers[msg.user]["buystone_warning"] === true) {
                     Messenger.sendInfoMessage("Okay, your next tip of " + cb.settings.stone_price + " tokens will buy you a " + pokedex.data[pokemonUsers[msg.user].pokemon].type.stone, msg.user);
@@ -554,7 +688,7 @@ cb.onMessage(function (msg) {
 
 
 
-function getRandomPokemon(amount?: number) {
+function getRandomPokemon(amount) {
     var rnd = 0;
     var assignRarity = rarity.common;
 
@@ -565,14 +699,13 @@ function getRandomPokemon(amount?: number) {
     if (amount >= cb.settings.rare_tip) {
         assignRarity = rarity.rare;
     }
-    /*
     if (amount >= cb.settings.legendary_tip)
     {
         assignRarity = rarity.legendary;
     }
-    */
-    //while (rnd === 0 || pokedex.data[rnd].stage !== 1 || pokedex.data[rnd].rarity !== assignRarity) { //use this once pokedex is complete
-    while (rnd === 0 || pokedex.data[rnd].rarity !== assignRarity) {
+
+    while (rnd === 0 || pokedex.data[rnd].stage !== 1 || pokedex.data[rnd].rarity !== assignRarity) { //use this once pokedex is complete
+    //while (rnd === 0 || pokedex.data[rnd].rarity !== assignRarity) {
         rnd = Math.floor(Math.random() * pokedex.data.length);
     }
     return rnd;
@@ -583,7 +716,7 @@ function recordTip(user, amount) {
         users.add(user, getRandomPokemon(amount), amount);
     } else if (pokemonUsers[user] !== undefined && pokemonUsers[user]["buystone_confirm"] === true) {
         if (amount === cb.settings.stone_price) {
-            Messenger.sendInfoMessage("You just purchased a " + pokedex.data[pokemonUsers[user].pokemon].type.stone + "!", user);
+            Messenger.sendInfoMessage("You just purchased an Evolution Stone!", user);
             pokemonUsers[user]["buystone_warning"] = false;
             pokemonUsers[user]["buystone_confirm"] = false;
             users.evolve(user);
@@ -602,13 +735,13 @@ function isSuperuser(username, isMod) {
     return (username == cb.room_slug || isMod && cb.settings.allow_mod_superuser_cmd == true);
 }
 
-cb.onTip(function (tip) {
+cb.onTip(function(tip) {
     recordTip(tip.from_user, tip.amount);
 });
 
 
 
-cb.onEnter(function (user) {
+cb.onEnter(function(user) {
 
 
     var welcome = {
@@ -620,7 +753,7 @@ cb.onEnter(function (user) {
             { entry: "There are still more Pokemon are waiting to be discovered" },
             { entry: "Keep an eye out for them in the future!" }
         ],
-        show: function () {
+        show: function() {
             var tempStr = "";
             var tempChr = "  \uD834\uDD4F\n"
             for (num = 0; num < this.data.length; num++) {
@@ -659,7 +792,7 @@ var banner = {
         { entry: "'/release' to remove your Pokemon" },
         { entry: "Prices:" }
     ],
-    start: function () {
+    start: function() {
         var tempStr = "";
         var tempChr = " :pkmnball ";
         for (num = 0; num < banner.data.length; num++) {
@@ -668,8 +801,8 @@ var banner = {
                 tempStr += tempChr;
             }
         }
-        var tempRarity = [rarity.common, rarity.uncommon, rarity.rare];
-        var tempPrices = [cb.settings.catch_pokemon, cb.settings.uncommon_tip, cb.settings.rare_tip];
+        var tempRarity = [rarity.common, rarity.uncommon, rarity.rare, rarity.legendary];
+        var tempPrices = [cb.settings.catch_pokemon, cb.settings.uncommon_tip, cb.settings.rare_tip, cb.settings.legendary_tip];
 
         for (num = 0; num < tempRarity.length; num++) {
             var tempPkmn = 0;
@@ -687,7 +820,7 @@ var banner = {
 };
 
 var settingsHelper = {
-    parseBoolean: function (str) {
+    parseBoolean: function(str) {
         return (str == "Yes");
     }
 };
@@ -715,7 +848,7 @@ function init() {
             "! Asudem, the Pokedex bot developer, has a special message for you: Thank you for " +
             SpecialThanks[cb.room_slug].reason);
     }
-    Messenger.sendBroadcasterNotice("This Pokedex bot is in beta. It can not become better if I do not know what is wrong. Please comment on the bot's page any errors or questions. Thank you.");
+    Messenger.sendBroadcasterNotice("This Pokedex bot is in beta. Please comment on the bot's page any errors or questions. Thank you.");
     //Banner disabled for now
     cb.setTimeout(banner.start, cb.settings.banner_rotate * 1000)
 }
