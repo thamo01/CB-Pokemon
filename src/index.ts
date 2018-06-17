@@ -2,7 +2,7 @@ import Game from "./controllers/game";
 
 const App = {
     Name: "Pokemon - Gotta Catch 'Em All",
-    Version: 0.1,
+    Version: 0.5,
     Dev: "thmo_",
     OriginalAuthor: "asudem", // Thanks for the idea and everything! Hit me up if you want me to contribute and/or merge or whatever!
     CMDS: {
