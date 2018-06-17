@@ -236,7 +236,7 @@ export default class Game {
     
             } else if(message.m.substring(1, 13) === this.config.CMDS.LISTTRAINERS) {
                 this.trainerManager.PokemonTrainers.forEach((trainer) => {
-                    Messenger.sendInfoMessage(trainer.User + " has " + trainer.Pokemon.Name + "on Level " + trainer.Pokemon.Level + " and it as " + trainer.Pokemon.Life + " HP left.", message.user);
+                    Messenger.sendInfoMessage(trainer.User + " has " + trainer.Pokemon.Name + " on Level " + trainer.Pokemon.Level + " and it as " + trainer.Pokemon.Life + " HP left.", message.user);
                 });
             } else if(message.m.substring(1, 14) === this.config.CMDS.LISTELITEFOUR) {
                 this.listEliteFourMembers(message.user);
@@ -295,16 +295,16 @@ export default class Game {
     private eliteFourDefeated(): boolean {
         var defeated = true;
         
-        if ((<string>cb.settings.elite_four_1).length > 0 && this.trainerManager.PokemonTrainers.has(cb.settings.elite_four_1)) {
+        if (cb.settings.elite_four_1.length > 0 && this.trainerManager.PokemonTrainers.has(cb.settings.elite_four_1)) {
             defeated = false;
         }
-        if ((<string>cb.settings.elite_four_2).length > 0 && this.trainerManager.PokemonTrainers.has(cb.settings.elite_four_2)) {
+        if (cb.settings.elite_four_2.length > 0 && this.trainerManager.PokemonTrainers.has(cb.settings.elite_four_2)) {
             defeated = false;
         }
-        if ((<string>cb.settings.elite_four_3).length > 0 && this.trainerManager.PokemonTrainers.has(cb.settings.elite_four_3)) {
+        if (cb.settings.elite_four_3.length > 0 && this.trainerManager.PokemonTrainers.has(cb.settings.elite_four_3)) {
             defeated = false;
         }
-        if ((<string>cb.settings.elite_four_4).length > 0 && this.trainerManager.PokemonTrainers.has(cb.settings.elite_four_4)) {
+        if (cb.settings.elite_four_4.length > 0 && this.trainerManager.PokemonTrainers.has(cb.settings.elite_four_4)) {
             defeated = false;
         }
 
@@ -312,13 +312,13 @@ export default class Game {
     }
 
     private isEliteFourMember(user: string): boolean {
-        if ((<string>cb.settings.elite_four_1).length > 0 && user === cb.settings.elite_four_1) {
+        if (cb.settings.elite_four_1 !== undefined && cb.settings.elite_four_1.length > 0 && user === cb.settings.elite_four_1) {
             return true;
-        }else if ((<string>cb.settings.elite_four_2).length > 0 && user === cb.settings.elite_four_2) {
+        }else if (cb.settings.elite_four_2 !== undefined && cb.settings.elite_four_2.length > 0 && user === cb.settings.elite_four_2) {
             return true;
-        } else if ((<string>cb.settings.elite_four_3).length > 0 && user === cb.settings.elite_four_3) {
+        } else if (cb.settings.elite_four_3 !== undefined && cb.settings.elite_four_3.length > 0 && user === cb.settings.elite_four_3) {
             return true;
-        } else if ((<string>cb.settings.elite_four_4).length > 0 && user === cb.settings.elite_four_4) {
+        } else if (cb.settings.elite_four_4 !== undefined && cb.settings.elite_four_4.length > 0 && user === cb.settings.elite_four_4) {
             return true;
         } else {
             return false;
@@ -326,19 +326,19 @@ export default class Game {
     }
 
     private listEliteFourMembers(user: string){
-        if ((<string>cb.settings.elite_four_1).length > 0 && this.trainerManager.PokemonTrainers.has(cb.settings.elite_four_1)) {
+        if (cb.settings.elite_four_1 !== undefined && cb.settings.elite_four_1.length > 0 && this.trainerManager.PokemonTrainers.has(cb.settings.elite_four_1)) {
             var trainer = this.trainerManager.PokemonTrainers.get(cb.settings.elite_four_1)!;
             Messenger.sendInfoMessage(trainer.User + " has " + trainer.Pokemon.Name + " on Level " + trainer.Pokemon.Level + " and it as " + trainer.Pokemon.Life + " HP left.", user);
         }
-        if ((<string>cb.settings.elite_four_2).length > 0 && this.trainerManager.PokemonTrainers.has(cb.settings.elite_four_2)) {
+        if (cb.settings.elite_four_2 !== undefined && cb.settings.elite_four_2.length > 0 && this.trainerManager.PokemonTrainers.has(cb.settings.elite_four_2)) {
             var trainer = this.trainerManager.PokemonTrainers.get(cb.settings.elite_four_2)!;
             Messenger.sendInfoMessage(trainer.User + " has " + trainer.Pokemon.Name + " on Level " + trainer.Pokemon.Level + " and it as " + trainer.Pokemon.Life + " HP left.", user);
         }
-        if ((<string>cb.settings.elite_four_3).length > 0 && this.trainerManager.PokemonTrainers.has(cb.settings.elite_four_3)) {
+        if (cb.settings.elite_four_3 !== undefined && cb.settings.elite_four_3.length > 0 && this.trainerManager.PokemonTrainers.has(cb.settings.elite_four_3)) {
             var trainer = this.trainerManager.PokemonTrainers.get(cb.settings.elite_four_3)!;
             Messenger.sendInfoMessage(trainer.User + " has " + trainer.Pokemon.Name + " on Level " + trainer.Pokemon.Level + " and it as " + trainer.Pokemon.Life + " HP left.", user);
         }
-        if ((<string>cb.settings.elite_four_4).length > 0 && this.trainerManager.PokemonTrainers.has(cb.settings.elite_four_4)) {
+        if (cb.settings.elite_four_4 !== undefined && cb.settings.elite_four_4.length > 0 && this.trainerManager.PokemonTrainers.has(cb.settings.elite_four_4)) {
             var trainer = this.trainerManager.PokemonTrainers.get(cb.settings.elite_four_4)!;
             Messenger.sendInfoMessage(trainer.User + " has " + trainer.Pokemon.Name + " on Level " + trainer.Pokemon.Level + " and it as " + trainer.Pokemon.Life + " HP left.", user);
         }
