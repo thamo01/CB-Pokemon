@@ -328,19 +328,19 @@ export default class Game {
     private listEliteFourMembers(user: string){
         if ((<string>cb.settings.elite_four_1).length > 0 && this.trainerManager.PokemonTrainers.has(cb.settings.elite_four_1)) {
             var trainer = this.trainerManager.PokemonTrainers.get(cb.settings.elite_four_1)!;
-            Messenger.sendInfoMessage(trainer.User + " has " + trainer.Pokemon.Name + "on Level " + trainer.Pokemon.Level + " and it as " + trainer.Pokemon.Life + " HP left.", user);
+            Messenger.sendInfoMessage(trainer.User + " has " + trainer.Pokemon.Name + " on Level " + trainer.Pokemon.Level + " and it as " + trainer.Pokemon.Life + " HP left.", user);
         }
         if ((<string>cb.settings.elite_four_2).length > 0 && this.trainerManager.PokemonTrainers.has(cb.settings.elite_four_2)) {
             var trainer = this.trainerManager.PokemonTrainers.get(cb.settings.elite_four_2)!;
-            Messenger.sendInfoMessage(trainer.User + " has " + trainer.Pokemon.Name + "on Level " + trainer.Pokemon.Level + " and it as " + trainer.Pokemon.Life + " HP left.", user);
+            Messenger.sendInfoMessage(trainer.User + " has " + trainer.Pokemon.Name + " on Level " + trainer.Pokemon.Level + " and it as " + trainer.Pokemon.Life + " HP left.", user);
         }
         if ((<string>cb.settings.elite_four_3).length > 0 && this.trainerManager.PokemonTrainers.has(cb.settings.elite_four_3)) {
             var trainer = this.trainerManager.PokemonTrainers.get(cb.settings.elite_four_3)!;
-            Messenger.sendInfoMessage(trainer.User + " has " + trainer.Pokemon.Name + "on Level " + trainer.Pokemon.Level + " and it as " + trainer.Pokemon.Life + " HP left.", user);
+            Messenger.sendInfoMessage(trainer.User + " has " + trainer.Pokemon.Name + " on Level " + trainer.Pokemon.Level + " and it as " + trainer.Pokemon.Life + " HP left.", user);
         }
         if ((<string>cb.settings.elite_four_4).length > 0 && this.trainerManager.PokemonTrainers.has(cb.settings.elite_four_4)) {
             var trainer = this.trainerManager.PokemonTrainers.get(cb.settings.elite_four_4)!;
-            Messenger.sendInfoMessage(trainer.User + " has " + trainer.Pokemon.Name + "on Level " + trainer.Pokemon.Level + " and it as " + trainer.Pokemon.Life + " HP left.", user);
+            Messenger.sendInfoMessage(trainer.User + " has " + trainer.Pokemon.Name + " on Level " + trainer.Pokemon.Level + " and it as " + trainer.Pokemon.Life + " HP left.", user);
         }
     }
 }
