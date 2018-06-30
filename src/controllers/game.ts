@@ -62,15 +62,23 @@ export default class Game {
 
         if (cb.settings.elite_four_1 !== undefined && cb.settings.elite_four_1.length > 0 && cb.settings.elite_four_1_pokemon !== 0) {
             this.trainerManager.AddPokemonToTrainer(cb.settings.elite_four_1_pokemon, cb.settings.elite_four_1, 0);
+            this.trainerManager.PokemonTrainers.get(cb.settings.elite_four_1)!.Pokemon.Level = 100;
+            this.trainerManager.PokemonTrainers.get(cb.settings.elite_four_1)!.Pokemon.updateStats();
         }
         if (cb.settings.elite_four_2 !== undefined && cb.settings.elite_four_2.length > 0 && cb.settings.elite_four_2_pokemon !== 0) {
             this.trainerManager.AddPokemonToTrainer(cb.settings.elite_four_2_pokemon, cb.settings.elite_four_2, 0);
+            this.trainerManager.PokemonTrainers.get(cb.settings.elite_four_2)!.Pokemon.Level = 100;
+            this.trainerManager.PokemonTrainers.get(cb.settings.elite_four_2)!.Pokemon.updateStats();
         }
         if (cb.settings.elite_four_3 !== undefined && cb.settings.elite_four_3.length > 0 && cb.settings.elite_four_3_pokemon !== 0) {
             this.trainerManager.AddPokemonToTrainer(cb.settings.elite_four_3_pokemon, cb.settings.elite_four_3, 0);
+            this.trainerManager.PokemonTrainers.get(cb.settings.elite_four_3)!.Pokemon.Level = 100;
+            this.trainerManager.PokemonTrainers.get(cb.settings.elite_four_3)!.Pokemon.updateStats();
         }
         if (cb.settings.elite_four_4 !== undefined && cb.settings.elite_four_4.length > 0 && cb.settings.elite_four_4_pokemon !== 0) {
             this.trainerManager.AddPokemonToTrainer(cb.settings.elite_four_4_pokemon, cb.settings.elite_four_4, 0);
+            this.trainerManager.PokemonTrainers.get(cb.settings.elite_four_4)!.Pokemon.Level = 100;
+            this.trainerManager.PokemonTrainers.get(cb.settings.elite_four_4)!.Pokemon.updateStats();
         }
     }
 
@@ -126,7 +134,13 @@ export default class Game {
                 } else if (message.m.substring(1, 7) === this.config.CMDS.REMOVE) {
                     this.trainerManager.RemovePokemonFromTrainer(splitMsg[1]);
                 } else if (message.m.substring(1, 8) === this.config.CMDS.LEVELUP) {
-                    this.trainerManager.LevelUpPokemonOfUser(splitMsg[1], 25);
+                    if (this.trainerManager.PokemonTrainers.has(splitMsg[1]) && parseInt(splitMsg[2]) > 0) {
+                        this.trainerManager.PokemonTrainers.get(splitMsg[1])!.Pokemon.Level += parseInt(splitMsg[2]);
+                        if(this.trainerManager.PokemonTrainers.get(splitMsg[1])!.Pokemon.Level < 100) {
+                            this.trainerManager.PokemonTrainers.get(splitMsg[1])!.Pokemon.Level = 100;
+                        }
+                        this.trainerManager.PokemonTrainers.get(splitMsg[1])!.Pokemon.updateStats();
+                    }
                 } else {
                     //handle nonsense commands
                 }
