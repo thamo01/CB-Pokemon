@@ -1,4 +1,4 @@
-import { Colors } from "../../misc/colors";
+import { Colors, MsgColors } from "../../misc/colors";
 import { EvoStones } from "./evostones";
 
 export class Type {
@@ -10,6 +10,7 @@ export class Type {
         public Id: number,
         public Name: string,
         public Color: Colors,
+        public FontColor: MsgColors =  MsgColors.Black,
         public Stone: EvoStones | null = null
     ) {
         this.Weakness = [];
@@ -19,11 +20,11 @@ export class Type {
 }
 
 const InternTypes = {
-    Normal: new Type(1, "Normal", Colors.LightGrey, EvoStones.Moon),
-    Fire: new Type(2, "Fire", Colors.Orange, EvoStones.Fire),
-    Water: new Type(3, "Water", Colors.Blue, EvoStones.Water),
-    Electric: new Type(4, "Electric", Colors.Yellow, EvoStones.Thunder),
-    Grass: new Type(5, "Grass", Colors.Green, EvoStones.Leaf),
+    Normal: new Type(1, "Normal", Colors.LightGrey, MsgColors.Black, EvoStones.Moon),
+    Fire: new Type(2, "Fire", Colors.Orange, MsgColors.Black, EvoStones.Fire),
+    Water: new Type(3, "Water", Colors.Blue, MsgColors.Black, EvoStones.Water),
+    Electric: new Type(4, "Electric", Colors.Yellow, MsgColors.Black, EvoStones.Thunder),
+    Grass: new Type(5, "Grass", Colors.Green, MsgColors.Black, EvoStones.Leaf),
     Ice: new Type(6, "Ice", Colors.IcyBlue),
     Fighting: new Type(7, "Fighting", Colors.LightRed),
     Poison: new Type(8, "Poison", Colors.LightPurple),
@@ -35,7 +36,7 @@ const InternTypes = {
     Ghost: new Type(14, "Ghost", Colors.GhostyPurple),
     Dragon: new Type(15, "Dragon", Colors.Purple),
     Steel: new Type(16, "Steel", Colors.SteelGrey),
-    Dark: new Type(17, "Dark", Colors.Darkness),
+    Dark: new Type(17, "Dark", Colors.Darkness,  MsgColors.GhostWhite),
     Fairy: new Type(18, "Fairy", Colors.FairyPink)
 }
 

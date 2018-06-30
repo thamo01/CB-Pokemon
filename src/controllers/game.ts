@@ -276,6 +276,7 @@ export default class Game {
             let pokemon = this.trainerManager.PokemonTrainers.get(message.user)!.Pokemon;
             message.m = PokeDex.GetPokemonIcon(pokemon) + " " + message.m;
             message.background = pokemon.Types[0].Color;
+            message.c = pokemon.Types[0].FontColor;
         }
 
         return message;
