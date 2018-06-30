@@ -37,7 +37,9 @@ export default class PokeDex {
         let random = 0;
         let rarity = Rarity.Common;
 
-        if (tipAmount >= cb.settings.legendary_tip) {
+        if (tipAmount >= cb.settings.mystic_tip) {
+            rarity = Rarity.Mystic;
+        }else if (tipAmount >= cb.settings.legendary_tip) {
             rarity = Rarity.Legendary;
         } else if (tipAmount >= cb.settings.rare_tip) {
             rarity = Rarity.Rare;

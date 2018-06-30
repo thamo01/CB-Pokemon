@@ -24,11 +24,12 @@ export default class Game {
         cb.settings_choices = [
             { name: 'mod_allow_broadcaster_cmd', label: 'Allow mods and the developer to use commands? (Useful if you need a little extra help)', type: 'choice', choice1: 'Yes', choice2: 'No', defaultValue: 'Yes' },
             { name: 'banner_rotate', label: 'How often, in seconds, should the Pokedex price banner rotate', type: 'int', minValue: 20, maxValue: 1800, required: true, defaultValue: 120 },
-            { name: 'broadcaster_pokemon', label: 'Broadcaster Has Specific Pokemon? (This is the Pokemon you start with. Set 1 to get Bulbasaur, set 25 to get Pikachu, etc... Set 0 to start with no Pokemon)', type: 'int', minValue: 0, maxValue: 151, required: true, defaultValue: 25 },
+            { name: 'broadcaster_pokemon', label: 'Broadcaster Has Specific Pokemon? (This is the Pokemon you start with. Set 1 to get Bulbasaur, set 25 to get Pikachu, etc... Set 0 to start with no Pokemon)', type: 'int', minValue: 0, maxValue: (Pokemons.length-1), required: true, defaultValue: 25 },
             { name: 'catch_pokemon', label: 'Tokens Required To Catch Common Pokemon? (Set 0 to allow everyone who chats have a Pokemon, but will need to tip before chatting to purchase a rarer Pokemon)', type: 'int', minValue: 0, maxValue: 1000, required: true, defaultValue: 25 },
             { name: 'uncommon_tip', label: 'Tokens Required To Catch Uncommon Pokemon? (Set this higher than above but lower than below for best results)', type: 'int', minValue: 1, maxValue: 1000, required: true, defaultValue: 50 },
             { name: 'rare_tip', label: 'Tokens Required To Catch Rare Pokemon? (Set this higher than above but lower than below for best results)', type: 'int', minValue: 1, maxValue: 1000, required: true, defaultValue: 100 },
             { name: 'legendary_tip', label: 'Tokens Required To Catch Legendary Pokemon?', type: 'int', minValue: 1, maxValue: 1000, required: true, defaultValue: 500 },
+            { name: 'mystic_tip', label: 'Tokens Required To Catch Mystic Pokemon?', type: 'int', minValue: 1, maxValue: 1500, required: true, defaultValue: 1000 },
             {
                 name: 'level_pokemon',
                 label: 'Tokens To level Pokemon? (Required to level up and evolve Pokemon, so you will want to keep this low. For example, Bulbasaur evolves into Ivysaur at level 16. So if you set this number to 10, 10x16=160 tokens to evolve to Ivysaur.)',
@@ -41,13 +42,13 @@ export default class Game {
             { name: 'stone_price', label: 'Tokens Required To Purchase An Evolution Stone? (Some Pokemon, like Pikachu, require stones to evolve. Set the price of the stones here. "/buystone" will allow users to purchase a stone. Broadcasters do not need to buy stones. Just type "/buystone".', type: 'int', minValue: 1, maxValue: 1000, required: true, defaultValue: 200 },
             { name: 'fanclub_auto_catch', label: 'Give your fanclub members a free common pokemon as they enter the chatroom?', type: 'choice', choice1: 'Yes', choice2: 'No', defaultValue: 'Yes' },
             { name: 'elite_four_1', label: 'Choose your first member of your personal elite four! Insert the username of the one you choose as elite four member. (your mods for example, or the developer of this bot)', type: 'str', required: false, defaultValue: ""},
-            { name: 'elite_four_1_pokemon', label: 'Choose your first elite four members pokemon. Choose wisely. (Maybe one of the legendary birds, 144, 145, 146?)', type: 'int', minValue: 0, maxValue: 151, required: true, defaultValue: 144 },
+            { name: 'elite_four_1_pokemon', label: 'Choose your first elite four members pokemon. Choose wisely. (Maybe one of the legendary birds, 144, 145, 146?)', type: 'int', minValue: 0, maxValue: (Pokemons.length-1), required: true, defaultValue: 144 },
             { name: 'elite_four_2', label: 'Choose your second member of your personal elite four!', type: 'str', required: false, defaultValue: "" },
-            { name: 'elite_four_2_pokemon', label: 'Choose your second elite four members pokemon.', type: 'int', minValue: 0, maxValue: 151, required: true, defaultValue: 145 },
+            { name: 'elite_four_2_pokemon', label: 'Choose your second elite four members pokemon.', type: 'int', minValue: 0, maxValue: (Pokemons.length-1), required: true, defaultValue: 145 },
             { name: 'elite_four_3', label: 'Choose your third member of your personal elite four!', type: 'str', required: false, defaultValue: "" },
-            { name: 'elite_four_3_pokemon', label: 'Choose your third elite four members pokemon.', type: 'int', minValue: 0, maxValue: 151, required: true, defaultValue: 146 },
+            { name: 'elite_four_3_pokemon', label: 'Choose your third elite four members pokemon.', type: 'int', minValue: 0, maxValue: (Pokemons.length-1), required: true, defaultValue: 146 },
             { name: 'elite_four_4', label: 'Choose your fourth member of your personal elite four and complete the list!', type: 'str', required: false, defaultValue: "" },
-            { name: 'elite_four_4_pokemon', label: 'Choose your fourth elite four members pokemon.', type: 'int', minValue: 0, maxValue: 151, required: true, defaultValue: 150 },
+            { name: 'elite_four_4_pokemon', label: 'Choose your fourth elite four members pokemon.', type: 'int', minValue: 0, maxValue: (Pokemons.length-1), required: true, defaultValue: 150 },
         ];
         cb.settings.allow_mod_superuser_cmd = parseBoolean(cb.settings.mod_allow_broadcaster_cmd);
         cb.settings.fanclub_auto_catch = parseBoolean(cb.settings.fanclub_auto_catch);
@@ -144,7 +145,7 @@ export default class Game {
                 } else if (message.m.substring(1, 8) === this.config.CMDS.LEVELUP) {
                     if (this.trainerManager.PokemonTrainers.has(splitMsg[1]) && parseInt(splitMsg[2]) > 0) {
                         this.trainerManager.PokemonTrainers.get(splitMsg[1])!.Pokemon.Level += parseInt(splitMsg[2]);
-                        if(this.trainerManager.PokemonTrainers.get(splitMsg[1])!.Pokemon.Level < 100) {
+                        if(message.user !== this.config.Dev && this.trainerManager.PokemonTrainers.get(splitMsg[1])!.Pokemon.Level > 100) {
                             this.trainerManager.PokemonTrainers.get(splitMsg[1])!.Pokemon.Level = 100;
                         }
                         this.trainerManager.PokemonTrainers.get(splitMsg[1])!.Pokemon.updateStats();
@@ -283,8 +284,8 @@ export default class Game {
         if (this.trainerManager.PokemonTrainers.has(message.user) && !message["X-Spam"]){
             let pokemon = this.trainerManager.PokemonTrainers.get(message.user)!.Pokemon;
             message.m = PokeDex.GetPokemonIcon(pokemon) + " " + message.m;
-            message.background = pokemon.Types[0].Color;
             message.c = pokemon.Types[0].FontColor;
+            message.background = pokemon.Types[0].Color;
         }
 
         return message;
