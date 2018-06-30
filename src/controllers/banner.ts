@@ -17,7 +17,7 @@ export default class Banner {
                             Prices:\n`;
 
     public sendBanner(user?: string): void {
-        const tempPrices = [cb.settings.catch_pokemon, cb.settings.uncommon_tip, cb.settings.rare_tip, cb.settings.legendary_tip];
+        const tempPrices = [cb.settings.catch_pokemon, cb.settings.uncommon_tip, cb.settings.rare_tip, cb.settings.legendary_tip, cb.settings.mystic_tip];
         let pricesMessage: string = "";
 
         for(const price of tempPrices) {
