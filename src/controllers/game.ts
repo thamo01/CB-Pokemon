@@ -39,6 +39,7 @@ export default class Game {
                 defaultValue: 10
             },
             { name: 'stone_price', label: 'Tokens Required To Purchase An Evolution Stone? (Some Pokemon, like Pikachu, require stones to evolve. Set the price of the stones here. "/buystone" will allow users to purchase a stone. Broadcasters do not need to buy stones. Just type "/buystone".', type: 'int', minValue: 1, maxValue: 1000, required: true, defaultValue: 200 },
+            { name: 'fanclub_auto_catch', label: 'Give your fanclub members a free common pokemon as they enter the chatroom?', type: 'choice', choice1: 'Yes', choice2: 'No', defaultValue: 'Yes' },
             { name: 'elite_four_1', label: 'Choose your first member of your personal elite four! Insert the username of the one you choose as elite four member. (your mods for example, or the developer of this bot)', type: 'str', required: false, defaultValue: ""},
             { name: 'elite_four_1_pokemon', label: 'Choose your first elite four members pokemon. Choose wisely. (Maybe one of the legendary birds, 144, 145, 146?)', type: 'int', minValue: 0, maxValue: 151, required: true, defaultValue: 144 },
             { name: 'elite_four_2', label: 'Choose your second member of your personal elite four!', type: 'str', required: false, defaultValue: "" },
@@ -49,6 +50,7 @@ export default class Game {
             { name: 'elite_four_4_pokemon', label: 'Choose your fourth elite four members pokemon.', type: 'int', minValue: 0, maxValue: 151, required: true, defaultValue: 150 },
         ];
         cb.settings.allow_mod_superuser_cmd = parseBoolean(cb.settings.mod_allow_broadcaster_cmd);
+        cb.settings.fanclub_auto_catch = parseBoolean(cb.settings.fanclub_auto_catch);
     }
 
     private initBroadcaster() {
@@ -97,6 +99,12 @@ export default class Game {
         if (!this.trainerManager.PokemonTrainers.has(user.user)) {
             Messenger.sendWelcomeMessage(user.user);
             this.banner.sendBanner(user.user);
+        }
+    }
+
+    public addFreebiePokemonToFanclub(user: user) {
+        if (user.in_fanclub && !this.trainerManager.PokemonTrainers.has(user.user)){
+            this.trainerManager.AddPokemonToTrainer(PokeDex.GetRandomPokemon(), user.user, 0);
         }
     }
     //#endregion

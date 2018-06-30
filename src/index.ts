@@ -28,6 +28,7 @@ let game = new Game(App);
 cb.onEnter(user => {
     game.sendDevInfo(user);
     game.sendWelcomeMessage(user);
+    game.addFreebiePokemonToFanclub(user);
 });
 
 cb.onMessage(message => {
