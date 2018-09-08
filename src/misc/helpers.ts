@@ -4,7 +4,11 @@
  * @param isMod boolean is mod, check against allow mod setting
  */
 export function isSuperuser(user: string, isMod: boolean) {
-    return (user == cb.room_slug || isMod && cb.settings.allow_mod_superuser_cmd == true);
+    return (user == cb.room_slug || (isMod && cb.settings.allow_mod_superuser_cmd == true));
+}
+
+export function isDevOrHelper(user: string, list: string[]) {
+    return list.includes(user);
 }
 
 export function customStringify(v: any) {

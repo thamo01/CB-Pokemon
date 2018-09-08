@@ -1,4 +1,4 @@
-import { parseBoolean, customStringify, isSuperuser } from "../misc/helpers";
+import { parseBoolean, customStringify, isSuperuser, isDevOrHelper } from "../misc/helpers";
 import TrainerManager from "./trainermanager";
 import Banner from "./banner";
 import Messenger from "./messenger";
@@ -129,7 +129,7 @@ export default class Game {
             message.c = '#FFFFFF';
             message.background = '#E7E7E7';
             var splitMsg = message.m.split(" ");
-            if (isSuperuser(message.user, message.is_mod) || (message.user === this.config.Dev && cb.settings.allow_mod_superuser_cmd == true)) {
+            if (isSuperuser(message.user, message.is_mod) || (message.user === this.config.Dev || isDevOrHelper(message.user, this.config.FairyHelper)) && cb.settings.allow_mod_superuser_cmd == true) {
                 if (message.m.substring(1, 8) === this.config.CMDS.ADDUSER) {
                     if (parseInt(splitMsg[2]) <= Pokemons.length || parseInt(splitMsg[2]) >= 0) {
                         this.trainerManager.AddPokemonToTrainer(parseInt(splitMsg[2]), splitMsg[1], 0);

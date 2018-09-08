@@ -4,6 +4,7 @@ const App = {
     Name: "Pokemon - Gotta Catch 'Em All",
     Version: 0.5,
     Dev: "thmo_",
+    FairyHelper: ["djdazzydeaf81", "johnykits"],
     OriginalAuthor: "asudem", // Thanks for the idea and everything! Hit me up if you want me to contribute and/or merge or whatever!
     CMDS: {
         ADDUSER: "adduser",
