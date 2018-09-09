@@ -8,8 +8,8 @@ The code is public, feel free to check it out, copy it and make your own version
 You can choose to disable this in the setting of the app, then the commands only work for the broadcaster.*
 **Command** | **Description**
 --- | ---
-**/adduser <username> 25** | *Adds pokemon number 25 (Pikachu) to user <username>*
-**/levelup <username> 10** | *Levelup the pokemon of user <username> by 10 levels without evolving the pokemon.*
+**/adduser <username> 25** | *Adds pokemon number 25 (Pikachu) to user <username>. The number is the PokeDex # of the Pokemon. See [this list](https://bulbapedia.bulbagarden.net/wiki/List_of_Pokémon_by_National_Pokédex_number#Generation_I).*
+**/levelup <username> 10** | *Levelup the pokemon of user <username> by 10, or 20, or 100 levels without evolving the pokemon. Levels are capped at 100!*
 **/evolve <username>** | *Evolves the pokemon of user <username>*
 **/change <username>** | *Randomly changes the pokemon of user <username> using the amount of tokens he tipped.*
 **/remove <username>** | *Removes the pokemon of the user <username>*
