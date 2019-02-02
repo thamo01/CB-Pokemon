@@ -1,6 +1,6 @@
 var Application = {
     Name: "Chaturbate Pokedex", // The name of the application
-    Version: 0.28, // The current version of the application
+    Version: 0.32, // The current version of the application
     Author: "asudem", // The author of this version.  Don't change this unless you modified something!
     OriginalAuthor: "asudem", // The original author, I.E. me.  If you change this, you're a cunt.  It's not like it gets displayed anywhere
     Debug: false, // Whether the application is in debug (verbose) mode.
@@ -16,12 +16,13 @@ var SpecialThanks = {
     bllueberrylove: { reason: "Inspiring me to make this bot!" },
     goldengoddessxxx: { reason: "Being a general nerd and qt camgrill!" },
     not_your_waifu: { reason: "Being out of this world! ;3" },
-    thenaughtywho: { reason: "Using the damn thing, lol." },
+    thenaughtywho: { reason: "For being an amazing beta tester!" },
     chris0x2048: { reason: "Being a bughunter!" },
     alessia_stone: { reason: "Inspiring a rotating banner." },
     choke_angel: { reason: "Beta testing and being irl body pillow." },
     bunni_buns: { reason: "Believing in me when I couldn't." },
     loli_cutey: { reason: "Reminding me how fun this app should be!" },
+    red_lil_bunny: { reason: "Helping me with my pokeballs ;3" }
 }
 
 var types = {
@@ -254,7 +255,8 @@ var users = {
     add: function(user, num, tipped) {
         try {
             pokemonUsers[user] = { pokemon: parseInt(num), totaltips: parseInt(tipped), level: 1 };
-            Messenger.sendInfoMessage("Congrats! You just caught a " + pokedex.data[num].name + "!", user, null);
+            Messenger.sendInfoMessage("Congrats! You just caught " + pokeball.icon() + " a " + pokedex.data[num].name + "!", user, null);
+            cb.sendNotice(pokeball.icon() + " " + pokedex.identify(num), user, pokedex.data[num].type.bgcolor, "#ffffff", 'bolder', null);
             pokedex.evolve_check(num, user);
 
 
@@ -283,7 +285,7 @@ var users = {
                 pokemonUsers[user].pokemon += 2;
             } else if (pokemonUsers[user].fire_stone !== undefined) {
                 Messenger.sendInfoMessage("Your " + pokedex.icon(pokemonUsers[user].pokemon) + " " + pokedex.data[pokemonUsers[user].pokemon].name + " has evolved into a " + pokedex.icon(pokemonUsers[user].pokemon + 3) + " " + pokedex.data[pokemonUsers[user].pokemon + 3].name + "!", user);
-                pokemonUsers[user].pokemon += 2;
+                pokemonUsers[user].pokemon += 3;
             } else {
                 Messenger.sendInfoMessage("E R R O R: `M[]", user);
                 pokemonUsers[user].pokemon = 0;
@@ -291,7 +293,7 @@ var users = {
 
         } else {
             Messenger.sendInfoMessage("Your " + pokedex.icon(pokemonUsers[user].pokemon) + " " + pokedex.data[pokemonUsers[user].pokemon].name + " has evolved into a " + pokedex.icon(pokemonUsers[user].pokemon + 1) + " " + pokedex.data[pokemonUsers[user].pokemon + 1].name + "!", user);
-            pokemonUsers[user].pokemon += 3;
+            pokemonUsers[user].pokemon += 1;
         }
 
 
@@ -330,46 +332,6 @@ var users = {
     }
 
 };
-
-//Credit http://stackoverflow.com/questions/921789/
-function loopObjects(object) {
-    for (var key in object) {
-        if (!object.hasOwnProperty(key)) continue;
-        var obj = object[key];
-        for (var prop in obj) {
-            if (!obj.hasOwnProperty(key)) continue;
-            cb.log(prop + " = " + obj[prop]);
-        }
-    }
-}
-
-if (cb == null) {
-    var cb = {
-        changeRoomSubject: function(new_subject) {},
-        drawPanel: function() {},
-        log: function(message) {},
-        onDrawPanel: function(func) {},
-        onEnter: function(func) {},
-        onLeave: function(func) {},
-        onMessage: function(func) {},
-        onShowStatus: function(func) {},
-        onTip: function(func) {},
-        room_slug: '',
-        sendNotice: function(message, to_user, background, foreground, weight, to_group) {},
-        setTimeout: function(func, msec) {},
-        settings_choices: [],
-        settings: {},
-        tipOptions: function(func) {},
-        limitCam_start: function(message, allowed_users) {},
-        limitCam_stop: function() {},
-        limitCam_addUsers: function(allowed_users) {},
-        limitCam_removeUsers: function(removed_users) {},
-        limitCam_removeAllUsers: function() {},
-        limitCam_userHasAccess: function(user) {},
-        limitCam_allUsersWithAccess: function() {},
-        limitCam_isRunning: function() {},
-    };
-}
 
 cb.settings_choices = [
     { name: 'mod_allow_broadcaster_cmd', label: 'Allow mods and the developer to use commands? (Useful if you need a little extra help)', type: 'choice', choice1: 'Yes', choice2: 'No', defaultValue: 'Yes' },
@@ -440,6 +402,7 @@ var Messenger = {
         this.sendGenericMessage(str, Colours.Black, null, recipient, group);
     },
     sendGenericMessage: function(str, colour, background, recipient, group) {
+        str = pokeball.icon() + " " + str;
         if (recipient != null && group != null) {
             cb.sendNotice(str, null, background, colour, 'bold', group);
             cb.sendNotice(str, recipient, background, colour, 'bold', null);
@@ -451,14 +414,12 @@ var Messenger = {
 };
 
 
-function debugLog(message) {
-    if (Application.Debug) cb.log("[{0}] TMG: {1}".format(new Date().toString(), message));
-}
-
 cb.onMessage(function(msg) {
     //[EXPERIMENTAL] Spam detection
     if (settingsHelper.parseBoolean(cb.settings.spam_block)) {
-        var actual_spam = ["free Sex in your city --> sexcom.me", "Look at", "Me Boys", "Hot sex chat in your town --> sexcom.me", "Look", "View my", "cam", "Watch", "c2c", "C 2 C", "Boys", "Look at my room. Boys"]
+        var actual_spam = ["free Sex in your city --> sexcom.me", "Look at", "Me Boys", "Hot sex chat in your town --> sexcom.me", "Look", "View my", "cam", "Watch", "c2c", "C 2 C", "Boys", "Look at my room. Boys", "VisitMy", "Profile", "CAM2CAM! guys?", "Check outMy", "Hi! Sex in your town --> sexlife.me",
+            "😚 c2c", "😚 Guys", "Guys. cam2cam?", "Come toMy", "Prof"
+        ]
         for (var i = 0, len = actual_spam.length; i < len; i++) {
             if (msg.m.toUpperCase() == actual_spam[i].toUpperCase()) {
                 msg["X-Spam"] = true;
@@ -599,7 +560,7 @@ cb.onMessage(function(msg) {
                     } else if (msg.m.substring(10, 11) === "f") {
                         Messenger.sendInfoMessage("Okay, your next tip of " + cb.settings.stone_price + " tokens will buy you a " + types.fire.stone, msg.user);
                         pokemonUsers[msg.user]["buystone_confirm"] = true;
-                        pokemonUsers[msg.user]["fire_stone"] = true;  
+                        pokemonUsers[msg.user]["fire_stone"] = true;
                     } else if (msg.m.substring(10, 11) === "t") {
                         Messenger.sendInfoMessage("Okay, your next tip of " + cb.settings.stone_price + " tokens will buy you a " + types.electric.stone, msg.user);
                         pokemonUsers[msg.user]["buystone_confirm"] = true;
@@ -678,9 +639,22 @@ cb.onMessage(function(msg) {
         users.add(msg.user, getRandomPokemon(0), 0);
     }
 
-    if (pokemonUsers[msg.user] !== undefined) {
-        msg.m = pokedex.icon(pokemonUsers[msg.user].pokemon) + " " + msg.m;
-        msg.background = pokedex.data[pokemonUsers[msg.user].pokemon].type.bgcolor;
+    try {
+        
+        if (pokemonUsers[msg.user] !== undefined) {
+            if (pokemonUsers[msg.user].pokemon !== undefined) {
+                if (msg.m.substring(0, 1) !== "/" && msg.m.substring(0, 1) !== "!") {
+                    msg.m = pokedex.icon(pokemonUsers[msg.user].pokemon) + " " + msg.m;
+                    msg.background = pokedex.data[pokemonUsers[msg.user].pokemon].type.bgcolor;
+                }
+            }
+        }
+    } catch (error) {
+        cb.log(error);
+        if (cb.settings.allow_mod_superuser_cmd == true) {
+            Messenger.sendErrorMessage(error, "asudem", null);
+        }
+
     }
 
     return msg;
@@ -699,13 +673,12 @@ function getRandomPokemon(amount) {
     if (amount >= cb.settings.rare_tip) {
         assignRarity = rarity.rare;
     }
-    if (amount >= cb.settings.legendary_tip)
-    {
+    if (amount >= cb.settings.legendary_tip) {
         assignRarity = rarity.legendary;
     }
 
     while (rnd === 0 || pokedex.data[rnd].stage !== 1 || pokedex.data[rnd].rarity !== assignRarity) { //use this once pokedex is complete
-    //while (rnd === 0 || pokedex.data[rnd].rarity !== assignRarity) {
+        //while (rnd === 0 || pokedex.data[rnd].rarity !== assignRarity) {
         rnd = Math.floor(Math.random() * pokedex.data.length);
     }
     return rnd;
@@ -738,7 +711,6 @@ function isSuperuser(username, isMod) {
 cb.onTip(function(tip) {
     recordTip(tip.from_user, tip.amount);
 });
-
 
 
 cb.onEnter(function(user) {
@@ -783,6 +755,32 @@ cb.onEnter(function(user) {
 
 });
 
+var pokeball = {
+    data: [
+
+        { shortcut: ":pokeball-tiny" },
+        { shortcut: ":greatball-small" },
+        { shortcut: ":ultraball-small" },
+        { shortcut: ":masterball-small" },
+        { shortcut: ":levelball-tiny" },
+        { shortcut: ":moonball-tiny" },
+        { shortcut: ":loveball-tiny" },
+        { shortcut: ":safariball-tiny" },
+        { shortcut: ":friendball-tiny" },
+        { shortcut: ":heavyball-tiny" },
+        { shortcut: ":fastball-tiny" },
+        { shortcut: ":repeatball-tiny" },
+
+    ],
+    icon: function() {
+        return this.data[Math.floor(Math.random() * this.data.length)].shortcut;
+    }
+
+}
+
+
+
+
 var banner = {
     data: [
         { entry: "Pokemon! Catch 'em all with tokens!" },
@@ -794,13 +792,13 @@ var banner = {
     ],
     start: function() {
         var tempStr = "";
-        var tempChr = " :pkmnball ";
         for (num = 0; num < banner.data.length; num++) {
             tempStr += banner.data[num].entry;
             if (eval(banner.data.length - 1) != num) {
-                tempStr += tempChr;
+                tempStr += " " + pokeball.icon() + " ";
             }
         }
+
         var tempRarity = [rarity.common, rarity.uncommon, rarity.rare, rarity.legendary];
         var tempPrices = [cb.settings.catch_pokemon, cb.settings.uncommon_tip, cb.settings.rare_tip, cb.settings.legendary_tip];
 
@@ -809,9 +807,7 @@ var banner = {
             while (tempPkmn === 0 || pokedex.data[tempPkmn].rarity !== tempRarity[num]) {
                 tempPkmn = Math.floor(Math.random() * pokedex.data.length);
             }
-
-            tempStr += " " + tempRarity[num].type + " - " + tempPrices[num] + " Tokens - " +
-                pokedex.icon(tempPkmn) + " " + tempChr;
+            tempStr += " " + tempRarity[num].type + " - " + tempPrices[num] + " Tokens - " + pokeball.icon() + " " + pokedex.icon(tempPkmn);
         }
         Messenger.sendGenericMessage(tempStr, null, null);
         cb.setTimeout(banner.start, cb.settings.banner_rotate * 1000)
@@ -849,8 +845,8 @@ function init() {
             SpecialThanks[cb.room_slug].reason);
     }
     Messenger.sendBroadcasterNotice("This Pokedex bot is in beta. Please comment on the bot's page any errors or questions. Thank you.");
-    //Banner disabled for now
-    cb.setTimeout(banner.start, cb.settings.banner_rotate * 1000)
+
+    banner.start();
 }
 
 //Change conditional if statement if required
