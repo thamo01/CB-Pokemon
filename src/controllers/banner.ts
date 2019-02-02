@@ -30,4 +30,9 @@ export default class Banner {
             cb.setTimeout(() => this.sendBanner(user, rotate), cb.settings.banner_rotate * 1000);
         }
     }
+
+    public sendWelcomeAndBannerMessage(user?: string) {
+        Messenger.sendWelcomeMessage(user);
+        this.sendBanner(user);
+    }
 }

@@ -2,7 +2,7 @@ import Game from "./controllers/game";
 
 const App = {
     Name: "Pokemon - Gotta Catch 'Em All",
-    Version: 0.5,
+    Version: "0.5.1",
     Dev: "thmo_",
     FairyHelper: ["djdazzydeaf81", "jibleeto"],
     OriginalAuthor: "asudem", // Thanks for the idea and everything! Hit me up if you want me to contribute and/or merge or whatever!
@@ -21,6 +21,7 @@ const App = {
         TRADE: "trade",
         LEVEL: "level",
         ATTACK: "attack",
+        SENDHELP: "sendhelp",
     }
 };
 

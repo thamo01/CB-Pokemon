@@ -150,6 +150,14 @@ export default class Game {
                         }
                         this.trainerManager.PokemonTrainers.get(splitMsg[1])!.Pokemon.updateStats();
                     }
+                } else if(message.m.substring(1, 9) === this.config.CMDS.SENDHELP) {
+                    let user: string | undefined = undefined;
+
+                    if(splitMsg[1] !== undefined && splitMsg[1] !== "") {
+                        user = splitMsg[1];
+                    }
+
+                    this.banner.sendWelcomeAndBannerMessage(user);
                 } else {
                     //handle nonsense commands
                 }

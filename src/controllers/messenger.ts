@@ -12,7 +12,12 @@ export default class Messenger {
         cb.sendNotice(message, user, background as string, foreground as string, weight, group as group)
     }
 
-    public static sendWelcomeMessage(user: string) {
+    public static sendWelcomeMessage(user?: string) {
+
+        if(user === undefined) {
+            user = "Trainer"
+        }
+
         const welcomeMsg = `:pkmnoak Hello there, ${user}! Welcome to the world of Chaturbate!
                             Here you will find ${cb.room_slug}'s room is inhabited by creatures called Pokemon!
                             The number of registered Pokemon in the Pokedex is currently at ${Pokemons.length - 1}
