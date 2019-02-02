@@ -239,33 +239,38 @@ export default class Game {
                         } else if(splitMsg[1] === cb.room_slug && !this.eliteFourDefeated()) {
                             Messenger.sendErrorMessage("Wow, woah.. Calm down little fellow trainer. You can't just head to the final boss before beating the Elite Four!", message.user);
                         } else {
-                            Messenger.sendSuccessMessage("Your Pokemon now fights with your foe's Pokemon! Wish em luck!", message.user);
-                            Messenger.sendErrorMessage(`Your Pokemon is being attacked by ${message.user}'s Pokemon! Wish em luck!`, splitMsg[1]);
-                            
                             const move = this.trainerManager.PokemonTrainers.get(message.user)!.Pokemon.Move;
                             const currentHP = this.trainerManager.PokemonTrainers.get(splitMsg[1])!.Pokemon.Life;
                             const leftHP = this.trainerManager.PokemonTrainers.get(message.user)!.Pokemon.Attack(this.trainerManager.PokemonTrainers.get(splitMsg[1])!.Pokemon);
-    
-                            Messenger.sendInfoMessage(`Dealt ${currentHP-leftHP} Points of Damage. Using ${move.Name}`, message.user);
-                            Messenger.sendInfoMessage(`Received ${currentHP-leftHP} Points of Damage. Using ${move.Name}`, splitMsg[1]);
-    
+
+                            if(cb.settings.public_fights !== true) {
+                                Messenger.sendSuccessMessage("Your Pokemon now fights with your foe's Pokemon! Wish em luck!", message.user);
+                                Messenger.sendErrorMessage(`Your Pokemon is being attacked by ${message.user}'s Pokemon! Wish em luck!`, splitMsg[1]);
+                            }
+                            cb.setTimeout(() => {}, 50);
+                            if(cb.settings.public_fights !== true) {
+                                Messenger.sendInfoMessage(`Dealt ${currentHP-leftHP} Points of Damage. Using ${move.Name}`, message.user);
+                                Messenger.sendInfoMessage(`Received ${currentHP-leftHP} Points of Damage. Using ${move.Name}`, splitMsg[1]);
+                            }
+
                             if (leftHP <= 0) {
-                                Messenger.sendSuccessMessage("Your Pokemon defeated your foe's Pokemon, congrats! Your pokemon levels up!", message.user);
-                                Messenger.sendErrorMessage("Your Pokemon sadly lost all it's life points in the battle. You have to release it :(", splitMsg[1]);
+                                if(cb.settings.public_fights === true) {
+                                    Messenger.sendSuccessMessage(`${message.user} successfully defeated ${splitMsg[1]} (dealt ${currentHP-leftHP} damage, using ${move.Name})`);
+                                } else {
+                                    Messenger.sendSuccessMessage("Your Pokemon defeated your foe's Pokemon, congrats! Your pokemon levels up!", message.user);
+                                    Messenger.sendErrorMessage("Your Pokemon sadly lost all it's life points in the battle. You have to release it :(", splitMsg[1]);
+                                }
                                 Messenger.sendInfoMessage(`You wave goodbye to your level ${this.trainerManager.PokemonTrainers.get(splitMsg[1])!.Pokemon.Level} ${this.trainerManager.PokemonTrainers.get(splitMsg[1])!.Pokemon.Name} as it scurries freely into the wild!`, splitMsg[1]);
+
                                 this.trainerManager.RemovePokemonFromTrainer(splitMsg[1]);
                                 this.trainerManager.LevelUpPokemonOfUser(message.user, 2);
-
-                                if(cb.settings.public_fights === true) {
-                                    Messenger.sendSuccessMessage(`${message.user} successfully defeated ${splitMsg[1]} (Dealt ${currentHP-leftHP} damage, using ${move.Name})`);
-                                }
                             } else {
+                                if(cb.settings.public_fights === true) {
+                                    Messenger.sendInfoMessage(`${message.user} attacked ${splitMsg[1]} (dealt ${currentHP-leftHP} damage, using ${move.Name}, ${leftHP} HP left)`);
+                                }
+
                                 Messenger.sendErrorMessage(`Your Pokemon fought hard, but couldn't beat your foe. Tho it is hurt... It has ${leftHP} HP left.`, message.user);
                                 Messenger.sendSuccessMessage(`Your Pokemon successfully defended itself, but lost life points. It has ${leftHP} HP left. Better start fighting back (using '/attack ${message.user}')`, splitMsg[1]);
-
-                                if(cb.settings.public_fights === true) {
-                                    Messenger.sendInfoMessage(`${message.user} attacked ${splitMsg[1]} (Dealt ${currentHP-leftHP} damage, using ${move.Name})`);
-                                }
                             }
                         }
                     } else {
