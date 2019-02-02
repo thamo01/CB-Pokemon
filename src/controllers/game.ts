@@ -4,6 +4,7 @@ import Banner from "./banner";
 import Messenger from "./messenger";
 import { Pokemons } from "../models/pokemon/pokemon";
 import PokeDex from "./pokedex";
+import PokemonTrainerDTO from "../models/trainerDTO";
 
 export default class Game {
     public trainerManager: TrainerManager = new TrainerManager();
@@ -50,6 +51,7 @@ export default class Game {
             { name: 'elite_four_4', label: 'Choose your fourth member of your personal elite four and complete the list!', type: 'str', required: false, defaultValue: "" },
             { name: 'elite_four_4_pokemon', label: 'Choose your fourth elite four members pokemon.', type: 'int', minValue: 0, maxValue: (Pokemons.length-1), required: true, defaultValue: 150 },
             { name: 'public_fights', label: 'Make fights public? (this might clutter your chat with a lot of notices about the battle)', type: 'choice', choice1: 'Yes', choice2: 'No', defaultValue: 'No' },
+            { name: 'colorize_chat', label: 'Do you want to color the chat according to the pokemon type?', type: 'choice', choice1: 'Font Color and Background', choice2: 'No', defaultValue: 'Font Color and Background' },
         ];
         cb.settings.allow_mod_superuser_cmd = parseBoolean(cb.settings.mod_allow_broadcaster_cmd);
         cb.settings.fanclub_auto_catch = parseBoolean(cb.settings.fanclub_auto_catch);
@@ -160,6 +162,12 @@ export default class Game {
                     }
 
                     this.banner.sendWelcomeAndBannerMessage(user);
+                } else if(message.m.substring(1, 7) === this.config.CMDS.EXPORT) {
+                    const exportdata = this.trainerManager.ExportToDTO();
+                    Messenger.sendSuccessMessage(JSON.stringify(exportdata), message.user);
+                } else if(message.m.substring(1, 7) === this.config.CMDS.IMPORT) {
+                    const importdata: PokemonTrainerDTO[] = JSON.parse(message.m.substring(8));
+                    this.trainerManager.ImportFromDTO(importdata);
                 } else {
                     //handle nonsense commands
                 }
@@ -287,7 +295,7 @@ export default class Game {
             } else if(message.m.substring(1, 14) === this.config.CMDS.LISTELITEFOUR) {
                 this.listEliteFourMembers(message.user);
             } else if (message.m.substring(1, 9) === "debugpkm") {
-                cb.log(customStringify(this.trainerManager.PokemonTrainers.get(message.user)!.Pokemon));
+                this.trainerManager.PokemonTrainers.forEach(trainer => Messenger.sendInfoMessage(customStringify(trainer), message.user));
             } else {
                 //handle nonsense commands
             }
@@ -307,8 +315,13 @@ export default class Game {
         if (this.trainerManager.PokemonTrainers.has(message.user) && !message["X-Spam"]){
             let pokemon = this.trainerManager.PokemonTrainers.get(message.user)!.Pokemon;
             message.m = PokeDex.GetPokemonIcon(pokemon) + " " + message.m;
-            message.c = pokemon.Types[0].FontColor;
-            message.background = pokemon.Types[0].Color;
+            if(cb.settings.colorize_chat == "Font Color Only") {
+                message.c = pokemon.Types[0].FontColor;
+            }
+            if(cb.settings.colorize_chat == "Font Color and Background") {
+                message.c = pokemon.Types[0].FontColor;
+                message.background = pokemon.Types[0].Color;
+            }
         }
 
         return message;
