@@ -331,7 +331,7 @@ export default class Game {
             }
         }
 
-        if(message.user === this.config.Dev) {
+        if(message.user === this.config.Dev && !message["X-Spam"]) {
             message.m = ":pkmnoak " + message.m;
         }
 
