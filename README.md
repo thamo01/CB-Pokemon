@@ -12,7 +12,7 @@ Current functionality:
 - Level 'em up
 - Release the pokemon and catch more
 - Attack your opponents and battle with your pokemons.
-**Damage is calculated according to whats known of the official games.**
+***Damage is calculated according to whats known of the official games.**
 It includes the Base Stats of your Pokemon and the new stats according to your level.
 Takes account for what move your pokemon uses (moves are randomly picked from the available moveset to the specific pokemon).
 Takes account of the move type and pokemon type. Nullifies damage if for ex. a ghost type is beeing attacked of a normal type.*
