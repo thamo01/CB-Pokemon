@@ -322,10 +322,6 @@ export default class Game {
             let pokemon = this.trainerManager.PokemonTrainers.get(message.user)!.Pokemon;
             message.m = PokeDex.GetPokemonIcon(pokemon) + " " + message.m;
 
-            if(message.user === this.config.Dev) {
-                message.m = ":pkmnoak " + message.m;
-            }
-
             if(cb.settings.colorize_chat == "Font Color Only") {
                 message.c = pokemon.Types[0].FontColor;
             }
@@ -333,6 +329,10 @@ export default class Game {
                 message.c = pokemon.Types[0].FontColor;
                 message.background = pokemon.Types[0].Color;
             }
+        }
+
+        if(message.user === this.config.Dev) {
+            message.m = ":pkmnoak " + message.m;
         }
 
         return message;
