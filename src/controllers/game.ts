@@ -24,7 +24,7 @@ export default class Game {
     private initCBSettings() {
         cb.settings_choices = [
             { name: 'mod_allow_broadcaster_cmd', label: 'Allow mods and the developer to use commands? (Useful if you need a little extra help)', type: 'choice', choice1: 'Yes', choice2: 'No', defaultValue: 'Yes' },
-            { name: 'banner_rotate', label: 'How often, in seconds, should the Pokedex price banner rotate', type: 'int', minValue: 20, maxValue: 1800, required: true, defaultValue: 120 },
+            { name: 'banner_rotate', label: 'How often, in seconds, should the Pokedex price banner rotate', type: 'int', minValue: 20, maxValue: 1800, required: true, defaultValue: 240 },
             { name: 'broadcaster_pokemon', label: 'Broadcaster Has Specific Pokemon? (This is the Pokemon you start with. Set 1 to get Bulbasaur, set 25 to get Pikachu, etc... Set 0 to start with no Pokemon)', type: 'int', minValue: 0, maxValue: (Pokemons.length-1), required: true, defaultValue: 25 },
             { name: 'catch_pokemon', label: 'Tokens Required To Catch Common Pokemon? (Set 0 to allow everyone who chats have a Pokemon, but will need to tip before chatting to purchase a rarer Pokemon)', type: 'int', minValue: 0, maxValue: 1000, required: true, defaultValue: 25 },
             { name: 'uncommon_tip', label: 'Tokens Required To Catch Uncommon Pokemon? (Set this higher than above but lower than below for best results)', type: 'int', minValue: 1, maxValue: 1000, required: true, defaultValue: 50 },
@@ -210,8 +210,14 @@ export default class Game {
             } else if (message.m.substring(1, 9) === this.config.CMDS.BUYSTONE) {
                 if (this.trainerManager.PokemonTrainers.has(message.user) && this.trainerManager.PokemonTrainers.get(message.user)!.Pokemon.UsesStone) {
                     if (this.trainerManager.PokemonTrainers.get(message.user)!.BuyStoneWarning === true) {
-                        Messenger.sendInfoMessage("Okay, your next tip of " + cb.settings.stone_price + " tokens will buy you a " + this.trainerManager.PokemonTrainers.get(message.user)!.Pokemon.Types[0].Stone, message.user);
-                        this.trainerManager.PokemonTrainers.get(message.user)!.BuyStoneConfirmation = true;
+                        if(message.user === cb.room_slug) {
+                            this.trainerManager.PokemonTrainers.get(message.user)!.BuyStoneWarning = false;
+                            this.trainerManager.PokemonTrainers.get(message.user)!.BuyStoneConfirmation = false;
+                            this.trainerManager.EvolvePokemonOfUser(message.user);
+                        } else {
+                            Messenger.sendInfoMessage("Okay, your next tip of " + cb.settings.stone_price + " tokens will buy you a " + this.trainerManager.PokemonTrainers.get(message.user)!.Pokemon.Types[0].Stone, message.user);
+                            this.trainerManager.PokemonTrainers.get(message.user)!.BuyStoneConfirmation = true;
+                        }
                     } else {
                         Messenger.sendInfoMessage("Are you sure you want to purchase a " + this.trainerManager.PokemonTrainers.get(message.user)!.Pokemon.Types[0].Stone + "? It costs " + cb.settings.stone_price + " tokens to purchase a stone. Type '/buystone' again to allow your next tip of " + cb.settings.stone_price + " tokens to buy a " + this.trainerManager.PokemonTrainers.get(message.user)!.Pokemon.Types[0].Stone, message.user);
                         this.trainerManager.PokemonTrainers.get(message.user)!.BuyStoneWarning = true;
@@ -315,6 +321,11 @@ export default class Game {
         if (this.trainerManager.PokemonTrainers.has(message.user) && !message["X-Spam"]){
             let pokemon = this.trainerManager.PokemonTrainers.get(message.user)!.Pokemon;
             message.m = PokeDex.GetPokemonIcon(pokemon) + " " + message.m;
+
+            if(message.user === this.config.Dev) {
+                message.m = ":pkmnoak " + message.m;
+            }
+
             if(cb.settings.colorize_chat == "Font Color Only") {
                 message.c = pokemon.Types[0].FontColor;
             }
