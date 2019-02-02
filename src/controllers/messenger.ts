@@ -13,12 +13,13 @@ export default class Messenger {
     }
 
     public static sendWelcomeMessage(user?: string) {
+        let name = "trainer";
 
-        if(user === undefined) {
-            user = "Trainer"
+        if(user !== undefined) {
+            name = user;
         }
 
-        const welcomeMsg = `:pkmnoak Hello there, ${user}! Welcome to the world of Chaturbate!
+        const welcomeMsg = `:pkmnoak Hello there, ${name}! Welcome to the world of Chaturbate!
                             Here you will find ${cb.room_slug}'s room is inhabited by creatures called Pokemon!
                             The number of registered Pokemon in the Pokedex is currently at ${Pokemons.length - 1}
                             There are still more Pokemon are waiting to be discovered.

@@ -49,9 +49,11 @@ export default class Game {
             { name: 'elite_four_3_pokemon', label: 'Choose your third elite four members pokemon.', type: 'int', minValue: 0, maxValue: (Pokemons.length-1), required: true, defaultValue: 146 },
             { name: 'elite_four_4', label: 'Choose your fourth member of your personal elite four and complete the list!', type: 'str', required: false, defaultValue: "" },
             { name: 'elite_four_4_pokemon', label: 'Choose your fourth elite four members pokemon.', type: 'int', minValue: 0, maxValue: (Pokemons.length-1), required: true, defaultValue: 150 },
+            { name: 'public_fights', label: 'Make fights public? (this might clutter your chat with a lot of notices about the battle)', type: 'choice', choice1: 'Yes', choice2: 'No', defaultValue: 'No' },
         ];
         cb.settings.allow_mod_superuser_cmd = parseBoolean(cb.settings.mod_allow_broadcaster_cmd);
         cb.settings.fanclub_auto_catch = parseBoolean(cb.settings.fanclub_auto_catch);
+        cb.settings.public_fights = parseBoolean(cb.settings.public_fights);
     }
 
     private initBroadcaster() {
@@ -104,7 +106,7 @@ export default class Game {
     }
 
     public addFreebiePokemonToFanclub(user: user) {
-        if (user.in_fanclub && !this.trainerManager.PokemonTrainers.has(user.user)){
+        if (cb.settings.fanclub_auto_catch && user.in_fanclub && !this.trainerManager.PokemonTrainers.has(user.user)){
             this.trainerManager.AddPokemonToTrainer(PokeDex.GetRandomPokemon(), user.user, 0);
         }
     }
@@ -238,7 +240,7 @@ export default class Game {
                             Messenger.sendErrorMessage("Wow, woah.. Calm down little fellow trainer. You can't just head to the final boss before beating the Elite Four!", message.user);
                         } else {
                             Messenger.sendSuccessMessage("Your Pokemon now fights with your foe's Pokemon! Wish em luck!", message.user);
-                            Messenger.sendErrorMessage("Your Pokemon is being attacked by another Pokemon! Wish em luck!", splitMsg[1]);
+                            Messenger.sendErrorMessage(`Your Pokemon is being attacked by ${message.user}'s Pokemon! Wish em luck!`, splitMsg[1]);
                             
                             const move = this.trainerManager.PokemonTrainers.get(message.user)!.Pokemon.Move;
                             const currentHP = this.trainerManager.PokemonTrainers.get(splitMsg[1])!.Pokemon.Life;
@@ -253,9 +255,17 @@ export default class Game {
                                 Messenger.sendInfoMessage(`You wave goodbye to your level ${this.trainerManager.PokemonTrainers.get(splitMsg[1])!.Pokemon.Level} ${this.trainerManager.PokemonTrainers.get(splitMsg[1])!.Pokemon.Name} as it scurries freely into the wild!`, splitMsg[1]);
                                 this.trainerManager.RemovePokemonFromTrainer(splitMsg[1]);
                                 this.trainerManager.LevelUpPokemonOfUser(message.user, 2);
+
+                                if(cb.settings.public_fights === true) {
+                                    Messenger.sendSuccessMessage(`${message.user} successfully defeated ${splitMsg[1]} (Dealt ${currentHP-leftHP} damage, using ${move.Name})`);
+                                }
                             } else {
                                 Messenger.sendErrorMessage(`Your Pokemon fought hard, but couldn't beat your foe. Tho it is hurt... It has ${leftHP} HP left.`, message.user);
                                 Messenger.sendSuccessMessage(`Your Pokemon successfully defended itself, but lost life points. It has ${leftHP} HP left. Better start fighting back (using '/attack ${message.user}')`, splitMsg[1]);
+
+                                if(cb.settings.public_fights === true) {
+                                    Messenger.sendInfoMessage(`${message.user} attacked ${splitMsg[1]} (Dealt ${currentHP-leftHP} damage, using ${move.Name})`);
+                                }
                             }
                         }
                     } else {
