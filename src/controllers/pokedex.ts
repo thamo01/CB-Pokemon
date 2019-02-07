@@ -1,12 +1,11 @@
 import { Pokemon, Pokemons } from "../models/pokemon/pokemon";
-import PokemonTrainer from "../models/pokemon-trainer";
 import { Rarity } from "../models/pokemon/rarity";
 
 export default class PokeDex {
     public static GetPokemonIcon(pokemon: Pokemon): string {
         let s = pokemon.Id + "";
-        while (s.length < 3) s = "0" + s;
-        return ':pkmn' + s;
+        while (s.length < 3) { s = "0" + s; }
+        return ":pkmn" + s;
     }
 
     public static IdentifyPokemon(pokemon: Pokemon): string {
@@ -27,19 +26,18 @@ export default class PokeDex {
         }
 
         if (pokemon.Evolves > 0 && pokemon.Evolves > pokemon.Level) {
-            return `Your ${this.GetPokemonIcon(pokemon)} ${pokemon.Name} evolves by leveling up. Tip for level ups until your pokemon reaches level ${pokemon.Evolves}.`; 
+            return `Your ${this.GetPokemonIcon(pokemon)} ${pokemon.Name} evolves by leveling up. Tip for level ups until your pokemon reaches level ${pokemon.Evolves}.`;
         }
 
         return "Evolution is a weird thing, isn't it...";
     }
 
-    public static GetRandomPokemon(tipAmount: number = 0): number {
-        let random = 0;
+    public static GetRandomPokemon(tipAmount = 0): number {
         let rarity = Rarity.Common;
 
         if (tipAmount >= cb.settings.mystic_tip) {
             rarity = Rarity.Mystic;
-        }else if (tipAmount >= cb.settings.legendary_tip) {
+        } else if (tipAmount >= cb.settings.legendary_tip) {
             rarity = Rarity.Legendary;
         } else if (tipAmount >= cb.settings.rare_tip) {
             rarity = Rarity.Rare;
@@ -47,14 +45,16 @@ export default class PokeDex {
             rarity = Rarity.Uncommon;
         }
 
+        return this.GetRandomPokemonOfRarity(rarity);
+    }
+
+    public static GetRandomPokemonOfRarity(rarity: Rarity): number {
+        let random = 0;
+
         while (random === 0 || Pokemons[random].Rariry !== rarity) {
             random = Math.floor(Math.random() * Pokemons.length);
         }
 
         return random;
-    }
-
-    public static GetRandomPokemonOfRarity(rarity: Rarity): number {
-        throw Error("Not Implemented Yet");
     }
 }

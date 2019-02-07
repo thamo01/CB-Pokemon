@@ -5,12 +5,14 @@ export class Move {
         public Id: number,
         public Name: string,
         public Power: number | null = null,
+        // tslint:disable-next-line:no-shadowed-variable
         public Type: Type,
-        public PowerPoints: number = 4,
-        public Accuracy: number | null = null
-    ){}
+        public PowerPoints = 4,
+        public Accuracy: number | null = null,
+    ) {}
 }
 
+// tslint:disable:object-literal-sort-keys
 const InternMoves = {
     Pound: new Move(1, "Pound", 40, Types.Normal, 35, 100),
     KarateChop: new Move(2, "Karate Chop", 50, Types.Fighting, 25, 100),
@@ -739,7 +741,8 @@ const InternMoves = {
     MenacingMoonrazeMaelstrom: new Move(725, "Menacing Moonraze Maelstrom", 200, Types.Ghost, 1, null),
     LetsSnuggleForever: new Move(726, "Lets Snuggle Forever", 190, Types.Fairy, 1, null),
     SplinteredStormshards: new Move(727, "Splintered Stormshards", 190, Types.Rock, 1, null),
-    ClangorousSoulblaze: new Move(728, "Clangorous Soulblaze", 185, Types.Dragon, 1, null)
-}
+    ClangorousSoulblaze: new Move(728, "Clangorous Soulblaze", 185, Types.Dragon, 1, null),
+};
+// tslint:enable:object-literal-sort-keys
 
 export { InternMoves as Moves };

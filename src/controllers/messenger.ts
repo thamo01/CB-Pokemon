@@ -1,21 +1,13 @@
-import { Type } from "../models/pokemon/types";
 import { MsgColors } from "../misc/colors";
 import { Groups } from "../misc/groups";
 import { Pokemons } from "../models/pokemon/pokemon";
 
 export default class Messenger {
 
-    private static sendMessage(message: string, user?: string, background?: MsgColors, foreground?: MsgColors, weight?: weight, group?: Groups) {
-        if (weight === undefined) {
-            weight = "bold";
-        }
-        cb.sendNotice(message, user, background as string, foreground as string, weight, group as group)
-    }
-
     public static sendWelcomeMessage(user?: string) {
         let name = "trainer";
 
-        if(user !== undefined) {
+        if (user !== undefined) {
             name = user;
         }
 
@@ -53,5 +45,12 @@ export default class Messenger {
 
     public static sendInfoMessage(message: string, user?: string, group?: Groups) {
         this.sendMessage(message, user, undefined, MsgColors.Black, undefined, group);
+    }
+
+    private static sendMessage(message: string, user?: string, background?: MsgColors, foreground?: MsgColors, weight?: weight, group?: Groups) {
+        if (weight === undefined) {
+            weight = "bold";
+        }
+        cb.sendNotice(message, user, background as string, foreground as string, weight, group as group);
     }
 }

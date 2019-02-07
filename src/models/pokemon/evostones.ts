@@ -3,5 +3,5 @@ export enum EvoStones {
     Fire = "Fire Stone",
     Water = "Water Stone",
     Thunder = "Thunder Stone",
-    Leaf = "Leaf Stone"
+    Leaf = "Leaf Stone",
 }

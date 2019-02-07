@@ -16,10 +16,10 @@
     Purple = "#ac8bfc",
     SteelGrey = "#B8B8D0",
     Darkness = "#705848",
-    FairyPink = "#EE99AC"
+    FairyPink = "#EE99AC",
 }
 
-export enum MsgColors {
+ export enum MsgColors {
    AliceBlue = "#F0F8FF",
    AntiqueWhite = "#FAEBD7",
    Aqua = "#00FFFF",
@@ -159,5 +159,5 @@ export enum MsgColors {
    White = "#FFFFFF",
    WhiteSmoke = "#F5F5F5",
    Yellow = "#FFFF00",
-   YellowGreen = "#9ACD32"
+   YellowGreen = "#9ACD32",
 }

@@ -4,7 +4,7 @@
  * @param isMod boolean is mod, check against allow mod setting
  */
 export function isSuperuser(user: string, isMod: boolean) {
-    return (user == cb.room_slug || (isMod && cb.settings.allow_mod_superuser_cmd == true));
+    return (user === cb.room_slug || (isMod && cb.settings.allow_mod_superuser_cmd === true));
 }
 
 export function isDevOrHelper(user: string, list: string[]) {
@@ -13,8 +13,8 @@ export function isDevOrHelper(user: string, list: string[]) {
 
 export function customStringify(v: any) {
     const cache = new Map();
-    return JSON.stringify(v, function (key, value) {
-        if (typeof value === 'object' && value !== null) {
+    return JSON.stringify(v, (_, value) => {
+        if (typeof value === "object" && value !== null) {
             if (cache.get(value)) {
             // Circular reference found, discard key
             return;
@@ -24,8 +24,8 @@ export function customStringify(v: any) {
         }
         return value;
     });
-};
+}
 
-export function parseBoolean (str: string): boolean {
-        return (str == "Yes");
+export function parseBoolean(str: string): boolean {
+        return (str === "Yes");
 }

@@ -1,31 +1,44 @@
 {
-  "name": "PokemonBotTS",
+  "name": "cb-pokemon",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "check": "gts check",
-    "clean": "gts clean",
-    "compile": "tsc -p .",
-    "browserify": "browserify ./build/src/index.js -o ./build/src/browserified-index.js",
-    "browserifymin": "browserify -p tinyify ./build/src/index.js > ./build/src/browserified-index.min.js",
-    "fix": "gts fix",
-    "prepare": "npm run compile",
-    "pretest": "npm run compile",
-    "posttest": "npm run check"
+  "description": "Chat based pokemon bot for CB",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/thamo01/CB-Pokemon.git"
   },
-  "keywords": [],
-  "author": "",
+  "homepage": "https://github.com/thamo01/CB-Pokemon#cbs-1-pokemon-bot",
+  "bugs": {
+    "url": "https://github.com/thamo01/CB-Pokemon/issues"
+  },
+  "main": "src/index.ts",
+  "scripts": {
+    "lint": "tslint --project ./tsconfig.json",
+    "type-check": "tsc --noEmit",
+    "type-check:watch": "npm run type-check -- --watch",
+    "build": "npm run build:types && npm run build:js",
+    "build:types": "tsc --emitDeclarationOnly",
+    "build:js": "webpack --mode=production"
+  },
+  "keywords": [
+    "pokemon",
+    "CB",
+    "chaturbate",
+    "bot"
+  ],
+  "author": "thmo_",
   "license": "ISC",
   "devDependencies": {
-    "gts": "^0.6.0",
-    "tinyify": "^2.4.2",
-    "ts-loader": "^4.3.0",
-    "typescript": "~2.8.0",
-    "webpack-cli": "^2.1.4"
-  },
-  "dependencies": {
-    "pokeapi-js-wrapper": "^1.1.1"
+    "@babel/cli": "^7.2.3",
+    "@babel/core": "^7.2.2",
+    "@babel/plugin-proposal-class-properties": "^7.3.0",
+    "@babel/plugin-proposal-object-rest-spread": "^7.3.2",
+    "@babel/preset-env": "^7.3.1",
+    "@babel/preset-typescript": "^7.1.0",
+    "babel-loader": "^8.0.5",
+    "fork-ts-checker-webpack-plugin": "^0.5.2",
+    "tslint": "^5.12.1",
+    "typescript": "^3.3.3",
+    "webpack": "^4.29.3",
+    "webpack-cli": "^3.2.3"
   }
 }

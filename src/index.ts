@@ -24,18 +24,18 @@ const App = {
         SENDHELP: "sendhelp",
         EXPORT: "export",
         IMPORT: "import",
-    }
+    },
 };
 
-let game = new Game(App);
+const game = new Game(App);
 
-cb.onEnter(user => {
+cb.onEnter((user) => {
     game.sendDevInfo(user);
     game.sendWelcomeMessage(user);
     game.addFreebiePokemonToFanclub(user);
 });
 
-cb.onMessage(message => {
+cb.onMessage((message) => {
     message = game.stripEmoticon(message);
     message = game.handleCommands(message);
     message = game.addFreebiePokemon(message);
@@ -44,7 +44,7 @@ cb.onMessage(message => {
     return message;
 });
 
-cb.onTip(tip => {
+cb.onTip((tip) => {
     game.purchaseObjects(tip);
     game.levelUp(tip);
 });

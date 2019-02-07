@@ -6,12 +6,12 @@ export class Type {
     public Strength: Type[];
     public Nullifies: Type[];
 
-    public constructor(
+    constructor(
         public Id: number,
         public Name: string,
         public Color: Colors,
         public FontColor: MsgColors =  MsgColors.Black,
-        public Stone: EvoStones | null = null
+        public Stone: EvoStones | null = null,
     ) {
         this.Weakness = [];
         this.Strength = [];
@@ -37,8 +37,8 @@ const InternTypes = {
     Dragon: new Type(15, "Dragon", Colors.Purple),
     Steel: new Type(16, "Steel", Colors.SteelGrey),
     Dark: new Type(17, "Dark", Colors.Darkness,  MsgColors.GhostWhite),
-    Fairy: new Type(18, "Fairy", Colors.FairyPink)
-}
+    Fairy: new Type(18, "Fairy", Colors.FairyPink),
+};
 
 InternTypes.Normal.Weakness.push(InternTypes.Fighting);
 InternTypes.Normal.Nullifies.push(InternTypes.Ghost);
@@ -99,6 +99,5 @@ InternTypes.Dark.Nullifies.push(InternTypes.Psychic);
 InternTypes.Fairy.Weakness.push(InternTypes.Poison, InternTypes.Steel);
 InternTypes.Fairy.Strength.push(InternTypes.Fighting, InternTypes.Bug, InternTypes.Dark);
 InternTypes.Fairy.Nullifies.push(InternTypes.Dragon);
-
 
 export { InternTypes as Types };

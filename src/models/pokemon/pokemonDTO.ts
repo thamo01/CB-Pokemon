@@ -3,6 +3,6 @@ export default class PokemonDTO {
     public Id: number,
     public Move: string,
     public Level: number,
-    public Petname: string | null = null
-    ){}
+    public Petname: string | null = null,
+    ) {}
 }

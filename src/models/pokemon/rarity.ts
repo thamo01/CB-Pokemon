@@ -4,5 +4,5 @@ export enum Rarity {
     Rare = "A Rare Pokemon",
     Legendary = "A Legendary Pokemon",
     Mystic = "A Mystic Pokemon",
-    Unobtainable = "An Unobtainable Pokemon"
+    Unobtainable = "An Unobtainable Pokemon",
 }
