@@ -24,6 +24,8 @@ const App = {
         SENDHELP: "sendhelp",
         EXPORT: "export",
         IMPORT: "import",
+        ACCEPT: "$accept",
+        DECLINE: "$decline",
     },
 };
 

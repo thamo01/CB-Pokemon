@@ -157,8 +157,16 @@ export default class Game {
                 } else {
                     Messenger.sendInfoMessage("Your Pokemon does not evolve using a stone!", message.user);
                 }
-            } else if (message.m.substring(1, 6) === this.config.CMDS.TRADE) {
-                this.trainerManager.TradePokemonWithUser(message.user, splitMsg[1]);
+            } else if (message.m.substring(1, 6) === this.config.CMDS.TRADE && splitMsg[1] !== this.config.CMDS.ACCEPT) {
+                if (this.trainerManager.PokemonTrainers.has(message.user) && this.trainerManager.PokemonTrainers.has(splitMsg[1])) {
+                    // use trainermanager to request trades on this command, use another command to actually trade if other party accepts the trade (yes/accept)
+                    // this.trainerManager.requestTrade(message.user, splitMsg[1]);
+                }
+            } else if (message.m.substring(1, 6) === this.config.CMDS.TRADE && (splitMsg[1] === this.config.CMDS.ACCEPT || this.config.CMDS.DECLINE)) {
+                if (this.trainerManager.PokemonTrainers.has(message.user)) {
+                    // use trainermanager to accept the trade, look up on a map/list and trade or cancel the trade
+                    // this.trainerManager.acceptTrade(message.user, splitMsg[1]);
+                }
             } else if (message.m.substring(1, 6) === this.config.CMDS.LEVEL) {
                 try {
                     if (!this.trainerManager.PokemonTrainers.has(splitMsg[1])) {
