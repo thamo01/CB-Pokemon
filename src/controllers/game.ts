@@ -1,6 +1,7 @@
-import { customStringify, isDevOrHelper, isSuperuser, parseBoolean } from "../misc/helpers";
+import { customStringify, parseBoolean } from "../misc/helpers";
 import { Pokemons } from "../models/pokemon/pokemon";
 import PokemonTrainerDTO from "../models/trainerDTO";
+import AccessControl from "./accesscontrol";
 import Banner from "./banner";
 import Messenger from "./messenger";
 import PokeDex from "./pokedex";
@@ -9,26 +10,29 @@ import TrainerManager from "./trainermanager";
 export default class Game {
     public trainerManager: TrainerManager = new TrainerManager();
     public banner: Banner = new Banner();
+    private readonly accessControl: AccessControl;
 
     constructor(public config: any) {
         if (config !== undefined) {
             this.initCBSettings();
 
+            this.accessControl = new AccessControl(cb.settings.allow_mod_superuser_cmd, this.config.Dev, this.config.FairyHelper);
+
             Messenger.sendSuccessMessage("Pokemon - Gotta Catch 'Em All v" + this.config.Version + " started.");
             Messenger.sendBroadcasterNotice("This Pokemon Bot is in beta. It can not become better if I do not know what is wrong. Please comment on the bot's page any errors or questions. Make sure to check out the original Version (PokeDex) of asudem! Thank you.");
 
             this.initBroadcaster();
+        } else {
+            this.accessControl = new AccessControl(cb.settings.allow_mod_superuser_cmd, "", []);
         }
     }
 
     //#region OnEnter Functions
     public sendDevInfo(user: user) {
-        if (user.user === this.config.Dev) {
-            if (cb.settings.allow_mod_superuser_cmd) {
-                Messenger.sendSuccessMessage("Pokedex v" + this.config.Version + " Support Mode: ON!", this.config.Dev);
-            } else {
-                Messenger.sendErrorMessage("Pokedex v" + this.config.Version + " Support Mode: OFF!", this.config.Dev);
-            }
+        if (this.accessControl.hasPermission(user, "SUPERUSER")) {
+            Messenger.sendSuccessMessage("Pokedex v" + this.config.Version + " Support Mode: ON!", this.config.Dev);
+        } else {
+            Messenger.sendErrorMessage("Pokedex v" + this.config.Version + " Support Mode: OFF!", this.config.Dev);
         }
     }
 
@@ -40,7 +44,7 @@ export default class Game {
     }
 
     public addFreebiePokemonToFanclub(user: user) {
-        if (cb.settings.fanclub_auto_catch && user.in_fanclub && !this.trainerManager.PokemonTrainers.has(user.user)) {
+        if (cb.settings.fanclub_auto_catch && this.accessControl.hasClaim(user, "IN_FANCLUB") && !this.trainerManager.PokemonTrainers.has(user.user)) {
             this.trainerManager.AddPokemonToTrainer(PokeDex.GetRandomPokemon(), user.user, 0);
         }
     }
@@ -59,63 +63,98 @@ export default class Game {
     }
 
     public handleCommands(message: message): message {
-        if (message.m.substring(0, 1) === "/") {
-            /* If it starts with a /, suppress that shit and assume it's a command */
-            message["X-Spam"] = true;
-            message.c = "#FFFFFF";
-            message.background = "#E7E7E7";
-            let splitMsg = message.m.split(" ");
-            if (isSuperuser(message.user, message.is_mod) || (message.user === this.config.Dev || isDevOrHelper(message.user, this.config.FairyHelper)) && cb.settings.allow_mod_superuser_cmd === true) {
-                if (message.m.substring(1, 8) === this.config.CMDS.ADDUSER) {
-                    if (parseInt(splitMsg[2], 10) <= Pokemons.length || parseInt(splitMsg[2], 10) >= 0) {
-                        this.trainerManager.AddPokemonToTrainer(parseInt(splitMsg[2], 10), splitMsg[1], 0);
-                        const pkmn = this.trainerManager.PokemonTrainers.get(splitMsg[1])!.Pokemon;
-                        Messenger.sendInfoMessage(`${PokeDex.GetPokemonIcon(pkmn)} ${pkmn.Name} was given to ${splitMsg[1]}`);
-                    }
-                } else if (message.m.substring(1, 7) === this.config.CMDS.EVOLVE) {
-                    this.trainerManager.EvolvePokemonOfUser(splitMsg[1]);
-                } else if (message.m.substring(1, 7) === this.config.CMDS.CHANGE) {
-                    this.trainerManager.ChangePokemonOfUser(splitMsg[1]);
-                } else if (message.m.substring(1, 7) === this.config.CMDS.REMOVE) {
-                    this.trainerManager.RemovePokemonFromTrainer(splitMsg[1]);
-                } else if (message.m.substring(1, 8) === this.config.CMDS.LEVELUP) {
-                    if (this.trainerManager.PokemonTrainers.has(splitMsg[1]) && parseInt(splitMsg[2], 10) > 0) {
-                        this.trainerManager.PokemonTrainers.get(splitMsg[1])!.Pokemon.Level += parseInt(splitMsg[2], 10);
-                        if (message.user !== this.config.Dev && this.trainerManager.PokemonTrainers.get(splitMsg[1])!.Pokemon.Level > 100) {
-                            this.trainerManager.PokemonTrainers.get(splitMsg[1])!.Pokemon.Level = 100;
-                        }
-                        this.trainerManager.PokemonTrainers.get(splitMsg[1])!.Pokemon.updateStats();
-                    }
-                } else if (message.m.substring(1, 9) === this.config.CMDS.SENDHELP) {
-                    let user: string | undefined;
+        if (message.m.indexOf(this.config.Prefix) !== 0) {
+            return message;
+        }
 
-                    if (splitMsg[1] !== undefined && splitMsg[1] !== "") {
-                        user = splitMsg[1];
+        /* If it starts with the prefix, suppress that shit and assume it's a command */
+        message["X-Spam"] = true;
+        message.c = "#FFFFFF";
+        message.background = "#E7E7E7";
+
+        const args = message.m.slice(this.config.Prefix.length).trim().split(/ +/g);
+        let command = args.shift();
+        if (command === undefined) {
+            return message;
+        }
+
+        command = command.toLowerCase();
+
+        if (this.accessControl.hasPermission(message, "MOD")) {
+            /* Broadcaster only commands at all times */
+            if (command === this.config.CMDS.SUPPORT) {
+                cb.settings.allow_mod_superuser_cmd = !cb.settings.allow_mod_superuser_cmd;
+                Messenger.sendSuccessMessage("Support mode for Pokedex bot Ver." + this.config.Version + " is now " + (cb.settings.allow_mod_superuser_cmd ? "ACTIVATED" : "DEACTIVATED") + "!", cb.room_slug);
+            }
+        }
+
+        if (this.accessControl.hasPermission(message, "SUPERUSER")) {
+            switch (command) {
+                case this.config.CMDS.ADDUSER: {
+                    const [targetUser, pokedexNumberString] = args;
+                    const pokedexNumber = parseInt(pokedexNumberString, 10);
+                    if (pokedexNumber <= Pokemons.length && pokedexNumber >= 0) {
+                        this.trainerManager.AddPokemonToTrainer(pokedexNumber, targetUser, 0);
+                        const pkmn = this.trainerManager.PokemonTrainers.get(targetUser)!.Pokemon;
+                        Messenger.sendInfoMessage(`${PokeDex.GetPokemonIcon(pkmn)} ${pkmn.Name} was given to ${targetUser}`);
+                    }
+                    break;
+                }
+                case this.config.CMDS.EVOLVE: {
+                    const [targetUser] = args;
+                    this.trainerManager.EvolvePokemonOfUser(targetUser);
+                    break;
+                }
+                case this.config.CMDS.CHANGE: {
+                    const [targetUser] = args;
+                    this.trainerManager.ChangePokemonOfUser(targetUser);
+                    break;
+                }
+                case this.config.CMDS.REMOVE: {
+                const [targetUser] = args;
+                this.trainerManager.RemovePokemonFromTrainer(targetUser);
+                break;
+                }
+                case this.config.CMDS.LEVELUP: {
+                    const [targetUser, levelsString] = args;
+                    const levels = parseInt(levelsString, 10);
+
+                    if (this.trainerManager.PokemonTrainers.has(targetUser) && levels > 0) {
+                        this.trainerManager.PokemonTrainers.get(targetUser)!.Pokemon.Level += levels;
+                        if (message.user !== this.config.Dev && this.trainerManager.PokemonTrainers.get(targetUser)!.Pokemon.Level > 100) {
+                            this.trainerManager.PokemonTrainers.get(targetUser)!.Pokemon.Level = 100;
+                        }
+                        this.trainerManager.PokemonTrainers.get(targetUser)!.Pokemon.updateStats();
+                    }
+                    break;
+                }
+                case this.config.CMDS.SENDHELP: {
+                    const [targetUser] = args;
+
+                    let user: string | undefined;
+                    if (targetUser !== undefined && targetUser !== "") {
+                        user = targetUser;
                     }
 
                     this.banner.sendWelcomeAndBannerMessage(user);
-                } else if (message.m.substring(1, 7) === this.config.CMDS.EXPORT) {
+                    break;
+                }
+                case this.config.CMDS.EXPORT: {
                     const exportdata = this.trainerManager.ExportToDTO();
                     Messenger.sendSuccessMessage(JSON.stringify(exportdata), message.user);
-                } else if (message.m.substring(1, 7) === this.config.CMDS.IMPORT) {
-                    const importdata: PokemonTrainerDTO[] = JSON.parse(message.m.substring(8));
+                    break;
+                }
+                case this.config.CMDS.IMPORT: {
+                    const json = args.join(" ");
+                    const importdata: PokemonTrainerDTO[] = JSON.parse(json);
                     this.trainerManager.ImportFromDTO(importdata);
-                } else {
-                    // handle nonsense commands
+                    break;
                 }
             }
+        }
 
-            if (message.user === cb.room_slug || (message.user === this.config.Dev && cb.settings.allow_mod_superuser_cmd === true)) {
-                /* Broadcaster only commands at all times */
-                if (message.m.substring(1) === this.config.CMDS.SUPPORT) {
-                    cb.settings.allow_mod_superuser_cmd = !cb.settings.allow_mod_superuser_cmd;
-                    Messenger.sendSuccessMessage("Support mode for Pokedex bot Ver." + this.config.Version + " is now " + (cb.settings.allow_mod_superuser_cmd ? "ACTIVATED" : "DEACTIVATED") + "!", cb.room_slug);
-                } else {
-                    // handle nonsense commands
-                }
-            }
-
-            if (message.m.substring(1, 8) === this.config.CMDS.RELEASE) {
+        switch (command) {
+            case this.config.CMDS.RELEASE: {
                 try {
                     if (this.trainerManager.PokemonTrainers.has(message.user)) {
                         Messenger.sendInfoMessage(`You wave goodbye to your level ${this.trainerManager.PokemonTrainers.get(message.user)!.Pokemon.Level} ${this.trainerManager.PokemonTrainers.get(message.user)!.Pokemon.Name} as it scurries freely into the wild!`, message.user);
@@ -126,20 +165,24 @@ export default class Game {
                 } catch (err) {
                     Messenger.sendInfoMessage("Huh? It looks like you don't have a Pokemon. What exactly are you releasing?", message.user);
                 }
-            } else if (message.m.substring(1, 9) === this.config.CMDS.IDENTIFY) {
+                break;
+            }
+            case this.config.CMDS.IDENTIFY: {
+                const [targetUser] = args;
                 try {
-                    splitMsg = message.m.split(" ");
-                    if (this.trainerManager.PokemonTrainers.has(splitMsg[1])) {
-                        Messenger.sendMessageToUser(PokeDex.IdentifyPokemon(this.trainerManager.PokemonTrainers.get(splitMsg[1])!.Pokemon), message.user);
-                    } else if (splitMsg[1] === "" || splitMsg[1] === undefined) {
+                    if (this.trainerManager.PokemonTrainers.has(targetUser)) {
+                        Messenger.sendMessageToUser(PokeDex.IdentifyPokemon(this.trainerManager.PokemonTrainers.get(targetUser)!.Pokemon), message.user);
+                    } else if (targetUser === "" || targetUser === undefined) {
                         Messenger.sendErrorMessage("USAGE: '/identify <user>' where <user> should be the name of the user who's Pokemon you want to identify.", message.user);
                     } else {
-                        Messenger.sendErrorMessage("Huh? It looks like [" + splitMsg[1] + "] doesn't have a Pokemon. Check the user's spelling?", message.user);
+                        Messenger.sendErrorMessage("Huh? It looks like [" + targetUser + "] doesn't have a Pokemon. Check the user's spelling?", message.user);
                     }
                 } catch (err) {
                     Messenger.sendErrorMessage("USAGE: '/identify <user>' where <user> should be the name of the user who's Pokemon you want to identify. " + err, message.user);
                 }
-            } else if (message.m.substring(1, 9) === this.config.CMDS.BUYSTONE) {
+                break;
+            }
+            case this.config.CMDS.BUYSTONE: {
                 if (this.trainerManager.PokemonTrainers.has(message.user) && this.trainerManager.PokemonTrainers.get(message.user)!.Pokemon.UsesStone) {
                     if (this.trainerManager.PokemonTrainers.get(message.user)!.BuyStoneWarning === true) {
                         if (message.user === cb.room_slug) {
@@ -157,74 +200,94 @@ export default class Game {
                 } else {
                     Messenger.sendInfoMessage("Your Pokemon does not evolve using a stone!", message.user);
                 }
-            } else if (message.m.substring(1, 6) === this.config.CMDS.TRADE && splitMsg[1] !== this.config.CMDS.ACCEPT) {
-                if (this.trainerManager.PokemonTrainers.has(message.user) && this.trainerManager.PokemonTrainers.has(splitMsg[1])) {
-                    // use trainermanager to request trades on this command, use another command to actually trade if other party accepts the trade (yes/accept)
-                    // this.trainerManager.requestTrade(message.user, splitMsg[1]);
+                break;
+            }
+            case this.config.CMDS.TRADE: {
+                const [param1] = args;
+
+                if (param1 === this.config.CMDS.ACCEPT) {
+                    // if user who sent the command "trade -accept" has a trade request open, trade it with the requester
+
+                } else if (param1 === this.config.CMDS.DECLINE) {
+                    // if user who sent the command "trade -decline" has a trade request open, decline the trade and remove request info
+
+                } else if (this.trainerManager.PokemonTrainers.has(param1)) {
+                    // if targetuser has no request open, request trade
+
+                } else {
+                    // ?? send help
+
                 }
-            } else if (message.m.substring(1, 6) === this.config.CMDS.TRADE && (splitMsg[1] === this.config.CMDS.ACCEPT || this.config.CMDS.DECLINE)) {
-                if (this.trainerManager.PokemonTrainers.has(message.user)) {
-                    // use trainermanager to accept the trade, look up on a map/list and trade or cancel the trade
-                    // this.trainerManager.acceptTrade(message.user, splitMsg[1]);
-                }
-            } else if (message.m.substring(1, 6) === this.config.CMDS.LEVEL) {
+
+                break;
+            }
+            case this.config.CMDS.LEVEL: {
+                const [targetUser] = args;
                 try {
-                    if (!this.trainerManager.PokemonTrainers.has(splitMsg[1])) {
+                    if (!this.trainerManager.PokemonTrainers.has(targetUser)) {
                         Messenger.sendErrorMessage("USAGE: '/level <user>' where <user> should be the name of the user who's Pokemon you level want to see.", message.user);
-                    } else if (this.trainerManager.PokemonTrainers.get(splitMsg[1])!.Pokemon.Evolves !== 0) {
-                        Messenger.sendInfoMessage(`${splitMsg[1]}'s ${this.trainerManager.PokemonTrainers.get(splitMsg[1])!.Pokemon.Name} is currently level ${this.trainerManager.PokemonTrainers.get(splitMsg[1])!.Pokemon.Level} and needs ${(this.trainerManager.PokemonTrainers.get(splitMsg[1])!.Pokemon.Evolves - this.trainerManager.PokemonTrainers.get(splitMsg[1])!.Pokemon.Level)} levels (or ${(this.trainerManager.PokemonTrainers.get(splitMsg[1])!.Pokemon.Evolves - this.trainerManager.PokemonTrainers.get(splitMsg[1])!.Pokemon.Level) * cb.settings.level_pokemon} tokens) to evolve.`, message.user);
-                    } else if (this.trainerManager.PokemonTrainers.get(splitMsg[1])!.Pokemon.Evolves === 0 && !this.trainerManager.PokemonTrainers.get(splitMsg[1])!.Pokemon.UsesStone) {
-                        Messenger.sendInfoMessage(`${splitMsg[1]}'s ${this.trainerManager.PokemonTrainers.get(splitMsg[1])!.Pokemon.Name} is currently level ${this.trainerManager.PokemonTrainers.get(splitMsg[1])!.Pokemon.Level} This Pokemon does not evolve.`, message.user);
-                    } else if (this.trainerManager.PokemonTrainers.get(splitMsg[1])!.Pokemon.UsesStone) {
-                        Messenger.sendInfoMessage(`${splitMsg[1]}'s ${this.trainerManager.PokemonTrainers.get(splitMsg[1])!.Pokemon.Name} is currently level ${this.trainerManager.PokemonTrainers.get(splitMsg[1])!.Pokemon.Level} and needs a ${this.trainerManager.PokemonTrainers.get(splitMsg[1])!.Pokemon.Types[0].Stone} to evolve. ${splitMsg[1]} may type '/buystone' to purchase one!`, message.user);
-                    } else if (this.trainerManager.PokemonTrainers.get(splitMsg[1])!.Pokemon.TradeEvolve) {
-                        Messenger.sendInfoMessage(`${splitMsg[1]}'s ${this.trainerManager.PokemonTrainers.get(splitMsg[1])!.Pokemon.Name} is currently level ${this.trainerManager.PokemonTrainers.get(splitMsg[1])!.Pokemon.Level} and needs to be traded to evolve. Type '/trade' followed by a username to evolve them!`, message.user);
+                        break;
+                    }
+
+                    const targetPokemon = this.trainerManager.PokemonTrainers.get(targetUser)!.Pokemon;
+
+                    if (targetPokemon.Evolves !== 0) {
+                        Messenger.sendInfoMessage(`${targetUser}'s ${targetPokemon.Name} is currently level ${targetPokemon.Level} and needs ${(targetPokemon.Evolves - targetPokemon.Level)} levels (or ${(targetPokemon.Evolves - targetPokemon.Level) * cb.settings.level_pokemon} tokens) to evolve.`, message.user);
+                    } else if (targetPokemon.UsesStone) {
+                        Messenger.sendInfoMessage(`${targetUser}'s ${targetPokemon.Name} is currently level ${targetPokemon.Level} and needs a ${targetPokemon.Types[0].Stone} to evolve. ${targetUser} may type '/buystone' to purchase one!`, message.user);
+                    } else if (targetPokemon.TradeEvolve) {
+                        Messenger.sendInfoMessage(`${targetUser}'s ${targetPokemon.Name} is currently level ${targetPokemon.Level} and needs to be traded to evolve. Type '/trade' followed by a username to evolve them!`, message.user);
+                    } else {
+                        Messenger.sendInfoMessage(`${targetUser}'s ${targetPokemon.Name} is currently level ${targetPokemon.Level} This Pokemon does not evolve.`, message.user);
                     }
                 } catch (err) {
-                    Messenger.sendErrorMessage("Could not get the level of " + splitMsg[1] + "'s Pokemon. Please check the spelling or verify they have caught a Pokemon. " + err);
+                    Messenger.sendErrorMessage("Could not get the level of " + targetUser + "'s Pokemon. Please check the spelling or verify they have caught a Pokemon. " + err);
                 }
-            } else if (message.m.substring(1, 7) === this.config.CMDS.ATTACK) {
-                if (this.trainerManager.PokemonTrainers.has(splitMsg[1])) {
+                break;
+            }
+            case this.config.CMDS.ATTACK: {
+                const [targetUser] = args;
+                if (this.trainerManager.PokemonTrainers.has(targetUser)) {
                     if (this.trainerManager.PokemonTrainers.has(message.user)) {
-                        if (message.user === splitMsg[1]) {
+                        if (message.user === targetUser) {
                             Messenger.sendErrorMessage("Your Pokemon can't attack itself now, can it? Do you have weird fetishes...?", message.user);
-                        } else if (splitMsg[1] === cb.room_slug && this.isEliteFourMember(message.user)) {
+                        } else if (targetUser === cb.room_slug && this.isEliteFourMember(message.user)) {
                             Messenger.sendErrorMessage("Hey now.. you are a member of the Elite Four, you shouldn't fight against " + cb.room_slug, message.user);
-                        } else if (splitMsg[1] === cb.room_slug && !this.eliteFourDefeated()) {
+                        } else if (targetUser === cb.room_slug && !this.eliteFourDefeated()) {
                             Messenger.sendErrorMessage("Wow, woah.. Calm down little fellow trainer. You can't just head to the final boss before beating the Elite Four!", message.user);
                         } else {
                             const move = this.trainerManager.PokemonTrainers.get(message.user)!.Pokemon.Move;
-                            const currentHP = this.trainerManager.PokemonTrainers.get(splitMsg[1])!.Pokemon.Life;
-                            const leftHP = this.trainerManager.PokemonTrainers.get(message.user)!.Pokemon.Attack(this.trainerManager.PokemonTrainers.get(splitMsg[1])!.Pokemon);
+                            const currentHP = this.trainerManager.PokemonTrainers.get(targetUser)!.Pokemon.Life;
+                            const leftHP = this.trainerManager.PokemonTrainers.get(message.user)!.Pokemon.Attack(this.trainerManager.PokemonTrainers.get(targetUser)!.Pokemon);
 
                             if (cb.settings.public_fights !== true) {
                                 Messenger.sendSuccessMessage("Your Pokemon now fights with your foe's Pokemon! Wish em luck!", message.user);
-                                Messenger.sendErrorMessage(`Your Pokemon is being attacked by ${message.user}'s Pokemon! Wish em luck!`, splitMsg[1]);
+                                Messenger.sendErrorMessage(`Your Pokemon is being attacked by ${message.user}'s Pokemon! Wish em luck!`, targetUser);
                             }
                             cb.setTimeout(() => true, 50);
                             if (cb.settings.public_fights !== true) {
                                 Messenger.sendInfoMessage(`Dealt ${currentHP - leftHP} Points of Damage. Using ${move.Name}`, message.user);
-                                Messenger.sendInfoMessage(`Received ${currentHP - leftHP} Points of Damage. Using ${move.Name}`, splitMsg[1]);
+                                Messenger.sendInfoMessage(`Received ${currentHP - leftHP} Points of Damage. Using ${move.Name}`, targetUser);
                             }
 
                             if (leftHP <= 0) {
                                 if (cb.settings.public_fights === true) {
-                                    Messenger.sendSuccessMessage(`${message.user} successfully defeated ${splitMsg[1]} (dealt ${currentHP - leftHP} damage, using ${move.Name})`);
+                                    Messenger.sendSuccessMessage(`${message.user} successfully defeated ${targetUser} (dealt ${currentHP - leftHP} damage, using ${move.Name})`);
                                 } else {
                                     Messenger.sendSuccessMessage("Your Pokemon defeated your foe's Pokemon, congrats! Your pokemon levels up!", message.user);
-                                    Messenger.sendErrorMessage("Your Pokemon sadly lost all it's life points in the battle. You have to release it :(", splitMsg[1]);
+                                    Messenger.sendErrorMessage("Your Pokemon sadly lost all it's life points in the battle. You have to release it :(", targetUser);
                                 }
-                                Messenger.sendInfoMessage(`You wave goodbye to your level ${this.trainerManager.PokemonTrainers.get(splitMsg[1])!.Pokemon.Level} ${this.trainerManager.PokemonTrainers.get(splitMsg[1])!.Pokemon.Name} as it scurries freely into the wild!`, splitMsg[1]);
+                                Messenger.sendInfoMessage(`You wave goodbye to your level ${this.trainerManager.PokemonTrainers.get(targetUser)!.Pokemon.Level} ${this.trainerManager.PokemonTrainers.get(targetUser)!.Pokemon.Name} as it scurries freely into the wild!`, targetUser);
 
-                                this.trainerManager.RemovePokemonFromTrainer(splitMsg[1]);
+                                this.trainerManager.RemovePokemonFromTrainer(targetUser);
                                 this.trainerManager.LevelUpPokemonOfUser(message.user, 2);
                             } else {
                                 if (cb.settings.public_fights === true) {
-                                    Messenger.sendInfoMessage(`${message.user} attacked ${splitMsg[1]} (dealt ${currentHP - leftHP} damage, using ${move.Name}, ${leftHP} HP left)`);
+                                    Messenger.sendInfoMessage(`${message.user} attacked ${targetUser} (dealt ${currentHP - leftHP} damage, using ${move.Name}, ${leftHP} HP left)`);
                                 }
 
                                 Messenger.sendErrorMessage(`Your Pokemon fought hard, but couldn't beat your foe. Tho it is hurt... It has ${leftHP} HP left.`, message.user);
-                                Messenger.sendSuccessMessage(`Your Pokemon successfully defended itself, but lost life points. It has ${leftHP} HP left. Better start fighting back (using '/attack ${message.user}')`, splitMsg[1]);
+                                Messenger.sendSuccessMessage(`Your Pokemon successfully defended itself, but lost life points. It has ${leftHP} HP left. Better start fighting back (using '/attack ${message.user}')`, targetUser);
                             }
                         }
                     } else {
@@ -233,17 +296,21 @@ export default class Game {
                 } else {
                     Messenger.sendErrorMessage("USAGE: '/attack <user> where <user> should be the name of the user who you want to fight with.", message.user);
                 }
-
-            } else if (message.m.substring(1, 13) === this.config.CMDS.LISTTRAINERS) {
+                break;
+            }
+            case this.config.CMDS.LISTTRAINERS: {
                 this.trainerManager.PokemonTrainers.forEach((trainer) => {
                     Messenger.sendInfoMessage(trainer.User + " has " + trainer.Pokemon.Name + " on Level " + trainer.Pokemon.Level + " and it as " + trainer.Pokemon.Life + " HP left.", message.user);
                 });
-            } else if (message.m.substring(1, 14) === this.config.CMDS.LISTELITEFOUR) {
+                break;
+            }
+            case this.config.CMDS.LISTELITEFOUR: {
                 this.listEliteFourMembers(message.user);
-            } else if (message.m.substring(1, 9) === "debugpkm") {
+                break;
+            }
+            case "debugpkm": {
                 this.trainerManager.PokemonTrainers.forEach((trainer) => Messenger.sendInfoMessage(customStringify(trainer), message.user));
-            } else {
-                // handle nonsense commands
+                break;
             }
         }
 

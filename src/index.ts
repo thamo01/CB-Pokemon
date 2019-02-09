@@ -1,3 +1,4 @@
+import "./controllers/accesscontrol";
 import Game from "./controllers/game";
 
 const App = {
@@ -6,6 +7,7 @@ const App = {
     Dev: "thmo_",
     FairyHelper: ["djdazzydeaf81", "jibleeto"],
     OriginalAuthor: "asudem", // Thanks for the idea and everything! Hit me up if you want me to contribute and/or merge or whatever!
+    Prefix: "/",
     CMDS: {
         ADDUSER: "adduser",
         LEVELUP: "levelup",
@@ -24,8 +26,8 @@ const App = {
         SENDHELP: "sendhelp",
         EXPORT: "export",
         IMPORT: "import",
-        ACCEPT: "$accept",
-        DECLINE: "$decline",
+        ACCEPT: "-accept",
+        DECLINE: "-decline",
     },
 };
 
