@@ -5,7 +5,6 @@ export default class PokemonTrainer {
     public BuyStoneConfirmation = false;
     public TradeRequestedAt?: string;
     public TradeRequestReceivedFrom?: string;
-    public TradeRequestAccepted = false;
     constructor(
         public User: string,
         // tslint:disable-next-line:no-shadowed-variable

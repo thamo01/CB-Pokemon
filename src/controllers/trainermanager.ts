@@ -75,8 +75,6 @@ export default class TrainerManager {
         } else {
             this.PokemonTrainers.get(user1)!.Pokemon = pokemon2;
         }
-
-        throw Error("Not Implemented Yet");
     }
 
     public ChangePokemonOfUser(user: string) {
@@ -95,7 +93,7 @@ export default class TrainerManager {
         const exportdata: PokemonTrainerDTO[] = [];
         this.PokemonTrainers.forEach((trainer) => {
             const pokemonDTO = new PokemonDTO(trainer.Pokemon.Id, trainer.Pokemon.Move.Name, trainer.Pokemon.Level, trainer.Pokemon.Petname);
-            exportdata.push(new PokemonTrainerDTO(trainer.User, pokemonDTO, trainer.Tipped, trainer.BuyStoneWarning, trainer.BuyStoneConfirmation, trainer.TradeRequestedAt, trainer.TradeRequestReceivedFrom, trainer.TradeRequestAccepted));
+            exportdata.push(new PokemonTrainerDTO(trainer.User, pokemonDTO, trainer.Tipped, trainer.BuyStoneWarning, trainer.BuyStoneConfirmation, trainer.TradeRequestedAt, trainer.TradeRequestReceivedFrom));
         });
 
         return exportdata;
@@ -117,7 +115,6 @@ export default class TrainerManager {
                 pokemontrainer.BuyStoneConfirmation = trainer.BuyStoneConfirmation;
                 pokemontrainer.BuyStoneWarning = trainer.BuyStoneWarning;
                 pokemontrainer.TradeRequestReceivedFrom = trainer.TradeRequestReceivedFrom;
-                pokemontrainer.TradeRequestAccepted = trainer.TradeRequestAccepted;
                 pokemontrainer.TradeRequestedAt = trainer.TradeRequestedAt;
 
                 this.PokemonTrainers.set(trainer.User, pokemontrainer);

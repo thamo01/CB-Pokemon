@@ -10,6 +10,5 @@ export default class PokemonTrainerDTO {
         public BuyStoneConfirmation = false,
         public TradeRequestedAt?: string,
         public TradeRequestReceivedFrom?: string,
-        public TradeRequestAccepted = false,
     ) { }
 }
